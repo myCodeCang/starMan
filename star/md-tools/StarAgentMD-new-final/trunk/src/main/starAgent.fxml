@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane id="gridPane" fx:id="gridPane" hgap="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1278.0" vgap="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1189.0" minWidth="10.0" percentWidth="0.0" prefWidth="927.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="386.0" minWidth="0.0" prefWidth="0.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="118.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="118.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="130.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="150.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="145.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="145.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="205.0" minHeight="8.0" prefHeight="8.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <Pane id="titlePane" prefHeight="53.0" prefWidth="1280.0" GridPane.columnSpan="2">
+            <children>
+                <Label layoutX="37.0" layoutY="21.0" styleClass="labelName" text="开盘价:">
+                    <font>
+                        <Font size="16.0" />
+                    </font></Label>
+                <Label fx:id="openingPrice" layoutX="98.0" layoutY="21.0" prefHeight="20.0" prefWidth="62.0" text="0.0" textFill="#59d35b">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                </Label>
+                <Label fx:id="closingPrice" layoutX="357.0" layoutY="22.0" prefHeight="20.0" prefWidth="62.0" text="0.0" textFill="#ee1919">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                </Label>
+                <Label layoutX="289.0" layoutY="22.0" styleClass="labelName" text="收盘价:">
+                    <font>
+                        <Font size="16.0" />
+                    </font></Label>
+                <Label layoutX="561.0" layoutY="21.0" styleClass="labelName" text="最高价:">
+                    <font>
+                        <Font size="16.0" />
+                    </font></Label>
+                <Label fx:id="highestPrice" layoutX="623.0" layoutY="23.0" prefHeight="20.0" prefWidth="62.0" text="0.0" textFill="#59d35b">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                </Label>
+                <Label fx:id="lowestPrice" layoutX="864.0" layoutY="21.0" prefHeight="20.0" prefWidth="62.0" text="0.0" textFill="#dd0f0f">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                </Label>
+                <Label layoutX="798.0" layoutY="21.0" styleClass="labelName" text="最低价:">
+                    <font>
+                        <Font size="16.0" />
+                    </font></Label>
+                <Label layoutX="982.0" layoutY="22.0" styleClass="labelName" text="当前成交价:">
+                    <font>
+                        <Font size="19.0" />
+                    </font>
+                    <!--<effect>-->
+                    <!--<InnerShadow>-->
+                    <!--<input>-->
+                    <!--<DropShadow />-->
+                    <!--</input>-->
+                    <!--</InnerShadow>-->
+                    <!--</effect>-->
+                </Label>
+                <Label fx:id="transPrice" layoutX="1108.0" layoutY="21.0" prefHeight="20.0" prefWidth="62.0" text="0.0" textFill="#dd0f0f">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                    <effect>
+                        <InnerShadow>
+                            <input>
+                                <DropShadow />
+                            </input>
+                        </InnerShadow>
+                    </effect>
+                </Label>
+            </children>
+            <effect>
+                <Blend opacity="0.78">
+                    <topInput>
+                        <Shadow>
+                            <input>
+                                <Bloom>
+                                    <input>
+                                        <Reflection>
+                                            <input>
+                                                <ImageInput />
+                                            </input>
+                                        </Reflection>
+                                    </input>
+                                </Bloom>
+                            </input>
+                        </Shadow>
+                    </topInput>
+                </Blend>
+            </effect>
+        </Pane>
+        <Pane prefHeight="33.0" prefWidth="1280.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <children>
+                <Label layoutX="982.0" layoutY="11.0" styleClass="labelName" text="商品名称">
+                    <font>
+                        <Font size="17.0" />
+                    </font>
+                </Label>
+                <ComboBox fx:id="comboxGroupIds" layoutX="1066.0" layoutY="8.0" prefHeight="30.0" prefWidth="198.0" promptText="请选择明星商品" />
+                <Label layoutX="563.0" layoutY="11.0" text="用户名" styleClass="labelName">
+                    <font>
+                        <Font size="17.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="userNameInput" layoutX="620.0" layoutY="13.0"  promptText="请输入用户名"/>
+                <Label layoutX="34.0" layoutY="11.0" text="日期" styleClass="labelName">
+                    <font>
+                        <Font size="17.0" />
+                    </font>
+                </Label>
+                <DatePicker fx:id="createDateBegin" layoutX="76.0" layoutY="11.0" />
+                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="270.0" layoutY="15.0" text="至" />
+                <DatePicker fx:id="createDateEnd" layoutX="289.0" layoutY="11.0" />
+                <Button fx:id="searchButton" onAction="#search" layoutX="793.0" layoutY="11.0" mnemonicParsing="false" text="查询" />
+                <Separator layoutX="12.0" layoutY="45.0" prefHeight="0.0" prefWidth="1262.0" />
+            </children>
+        </Pane>
+        <TableView fx:id="transList" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" GridPane.rowIndex="2" GridPane.rowSpan="4">
+            <columns>
+                <TableColumn prefWidth="95.0" text="商品ID" fx:id = "colgroupId"/>
+                <TableColumn prefWidth="104.0" text="交易ID" fx:id = "coltransId"/>
+                <!--<TableColumn prefWidth="102.0" text="交易ID(卖)" />-->
+                <TableColumn prefWidth="130.0" text="用户名" fx:id = "coluserName"/>
+                <!--<TableColumn prefWidth="134.0" text="卖用户" />-->
+                <TableColumn prefWidth="99.0" text="成交价" fx:id = "colPrice"/>
+                <TableColumn prefWidth="81.0" text="成交量" fx:id = "colAmount"/>
+                <TableColumn prefWidth="156.0" text="交易时间" fx:id = "colcreareDate"/>
+            </columns>
+            <GridPane.margin>
+                <Insets bottom="20.0" left="15.0" right="10.0" top="15.0" />
+            </GridPane.margin>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+        <TableView fx:id="buyList" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2">
+            <columns>
+                <TableColumn prefWidth="75.0" text="商品ID" fx:id = "buyGroupId"/>
+                <TableColumn prefWidth="99.0" text="用户名" fx:id = "buyUserName"/>
+                <TableColumn prefWidth="74.0" text="买价" fx:id = "buyPrice"/>
+                <TableColumn prefWidth="87.0" text="数量" fx:id = "buyNum"/>
+            </columns>
+            <GridPane.margin>
+                <Insets bottom="5.0" left="5.0" right="10.0" top="15.0" />
+            </GridPane.margin>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+        <TableView fx:id="sellList" prefHeight="346.0" prefWidth="349.0" style="-fx-background-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.rowSpan="2">
+            <columns>
+                <TableColumn prefWidth="84.0" text="商品ID" fx:id = "sellGroupId"/>
+                <TableColumn prefWidth="92.0" text="用户名" fx:id = "sellUserName"/>
+                <TableColumn prefWidth="74.0" text="卖价" fx:id = "sellPrice"/>
+                <TableColumn prefWidth="81.0" text="数量" fx:id = "sellNum"/>
+            </columns>
+            <GridPane.margin>
+                <Insets bottom="20.0" left="5.0" right="10.0" top="10.0" />
+            </GridPane.margin>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+        <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="6">
+            <children>
+                <Button fx:id="firstPage" layoutX="459.0" layoutY="-13.0" mnemonicParsing="false" onAction="#firstPage" text="首页" />
+                <Button layoutX="508.0" layoutY="-13.0" mnemonicParsing="false" onAction="#prvePage" text="上一页" />
+                <Button layoutX="716.0" layoutY="-13.0" mnemonicParsing="false" onAction="#nextPage" text="下一页" />
+                <Button layoutX="777.0" layoutY="-13.0" mnemonicParsing="false" onAction="#lastPage" text="尾页" />
+                <TextField fx:id="nowPage" layoutX="594.0" layoutY="-13.0" prefHeight="23.0" prefWidth="41.0" text="1" />
+                <Label layoutX="574.0" layoutY="-12.0" text="第">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <Label layoutX="639.0" layoutY="-12.0" text="页">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <Button layoutX="668.0" layoutY="-13.0" mnemonicParsing="false" onAction="#goPage" text="GO" />
+            </children>
+        </Pane>
+    </children>
+</GridPane>

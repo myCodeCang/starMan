@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>首页</title>
+	<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+	<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/swiper/swiper.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+</head>
+<body>
+<!--<header class="aui-bar aui-bar-nav home">-->
+	<!--<a class="aui-pull-left aui-btn">-->
+		<!--<span class="aui-iconfont aui-icon-close"></span>-->
+	<!--</a>-->
+	<!--<div class="aui-title">-->
+		<!--<span>明星经纪人</span>-->
+	<!--</div>-->
+	<!--<a class="aui-pull-right aui-btn">-->
+		<!--<span class="sangedian"></span>-->
+	<!--</a>-->
+<!--</header>-->
+<!--<div class="height-one"></div>-->
+<div class="aui-content home-menu">
+	<div class="home-menu-in" id="menu">
+		<img src="../image/in.png" onclick="menuShowHide()"/>
+		<div class="home-menu-my" id="my">
+			<a href="my.html">
+				<img src="../image/in-my.png"/>
+			</a>
+		</div>
+		<div class="home-menu-jiaoyi" id="jiaoyi">
+			<a href="wanghong.html?categoryId=&title=全部">
+				<img src="../image/in-jiaoyi.png"/>
+			</a>
+		</div>
+		<div class="home-menu-paimai" id="paimai" onclick="paimai()">
+			<a href="javascript:void(0)">
+				<img src="../image/in-paimai.png"/>
+			</a>
+		</div>
+		<div class="home-menu-shangcheng" id="shangcheng">
+			<a href="shopping.html">
+				<img src="../image/in-shangcheng.png"/>
+			</a>
+		</div>
+		<div class="home-menu-gonggao" id="gonggao">
+			<a href="xinwengonggao.html">
+				<img src="../image/in-gonggao.png"/>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="aui-content home-min">
+	<div onclick="liShowHide()">
+		<img src="../image/minxing.png"/>
+		<ul id="home-li">
+
+		</ul>
+	</div>
+</div>
+<div class="aui-content lunbo">
+	<div class="swiper-container">
+		<div class="swiper-wrapper" id="temp_starList">
+		</div>
+		<!-- Add Arrows -->
+		<div class="swiper-button-next"></div>
+		<div class="swiper-button-prev"></div>
+	</div>
+</div>
+</body>
+<script src="../css/script/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../css/script/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/html" id="tpl_starList">
+	{{if baseGoodsList.length == 0}}
+		<img src="../image/zanwumigxing.png">
+	{{/if}}
+	{{each baseGoodsList}}
+		<div class="swiper-slide">
+			<img src="{{imgUrl + $value.image}}">
+			<div class="slide-text">
+				<h3>{{$value.name}}</h3>
+				<span>{{$value.description}}</span>
+			</div>
+			<div class="aui-content-padded slide-detail">
+				<div class="slide-detail-img">
+					<img src="../image/in-jia.png" class="img1" onclick="colectStar({{$value.id}})"/>
+					<div class="touxiang" onclick="tohangqing({{$value.id}})">
+						<img src="{{imgUrl + $value.thumb}}"/>
+					</div>
+					<a href="geren-jianjie.html?id={{$value.id}}"><img src="../image/in-shiping.png" class="img2"/></a>
+				</div>
+				<h3 onclick="tohangqing({{$value.id}})">{{$value.name}}<span>({{$value.id}})</span></h3>
+				<p class="text-red" onclick="tohangqing({{$value.id}})">￥<span>{{$value.mdTradeMain.transactionPrice}}/秒</span></p>
+				<div class="aui-grid" onclick="tohangqing({{$value.id}})">
+					<div class="aui-row">
+						<div class="aui-col-xs-3">
+							<span>最高</span>
+							<span class="text-red">{{$value.mdTradeMain.highestPrice}}</span>
+						</div>
+						<div class="aui-col-xs-3">
+							<span>最低</span>
+							<span class="text-red">{{$value.mdTradeMain.lowestPrice}}</span>
+						</div>
+						<div class="aui-col-xs-3">
+							<span>今开</span>
+							<span class="text-red">{{$value.mdTradeMain.openingPrice}}</span>
+						</div>
+						<div class="aui-col-xs-3">
+							<span>转手</span>
+							<span class="text-red">{{$value.sum /2/ $value.num | percentFormat}}</span>
+						</div>
+					</div>
+				</div>
+				<a href="qiugou.html?id={{$value.id}}"><div class="aui-btn aui-btn-block">立即购买</div></a>
+			</div>
+		</div>
+	{{/each}}
+</script>
+<script type="text/html" id="tpl-category">
+	<a href="wanghong.html?categoryId=&title=全部"><li>全部</li></a>
+	{{each categoryList}}
+	<a href="wanghong.html?categoryId={{$value.id}}&title={{$value.classifyname}}"><li>{{$value.classifyname}}</li></a>
+	{{/each}}
+	<a href="wanghong.html?categoryId=0&title=自选"><li>自选</li></a>
+</script>
+
+<script type="text/javascript">
+    //框架初始化
+    qySoftInit("../../static/qyScript/web/");
+    //apicloud 准备完成
+    layui.use(['qyWin','qyForm','template'], initpage);
+    function initpage(){
+        localData();
+        getStarCategory();
+    }
+    
+    function localData() {
+        layui.qyForm.qyajax("/f/app/married/getTransingList",{},function(data){
+           data["imgUrl"]=CONS_IMG_URL;
+            var html = template('tpl_starList', data);
+            $("#temp_starList").html(html);
+            swiper();
+        });
+    }
+    //获取明星分类列表
+	function getStarCategory(){
+        layui.qyForm.qyajax("/f/app/married/getStarCategory",{},function(data){
+            var html = template('tpl-category', data);
+            $("#home-li").html(html);
+        });
+	}
+    /*swiper*/
+    function swiper(){
+        var swiper = new Swiper('.swiper-container', {
+            pagination: '.swiper-pagination',
+            nextButton: '.swiper-button-next',
+            prevButton: '.swiper-button-prev',
+            paginationClickable: true,
+            autoplay:false,
+            loop:true,
+            autoplayDisableOnInteraction : false
+        });
+    }
+	//收藏明星
+	function colectStar(groupId){
+        layui.qyForm.qyajax("/f/app/married/colectStar",{'groupId':groupId},function(data){
+            layui.qyWin.toast("恭喜您收藏成功!");
+        });
+	}
+	
+	function paimai() {
+//        layui.qyForm.qyajax("/f/app/userinfo/userinfo",{},function(data){
+//            if(data.user.isUsercenter == "1"){
+                layui.qyWin.win("paimaixianchang","paimaixianchang.html","");
+//            }else{
+//                layui.qyWin.toast("您不是承销商不能参加拍卖!");
+//                return;
+//			}
+//        });
+    }
+	
+    /*menu*/
+    function menuShowHide(){
+        if($('#menu>div').css('display') == 'none'){
+            $('#menu>div').show()
+        }else{
+            $('#menu>div').hide()
+        }
+    }
+    function liShowHide(){
+        if($('#home-li').css('display') == 'none'){
+            $('#home-li').show()
+        }else{
+            $('#home-li').hide()
+        }
+    }
+    function tohangqing(groupId){
+        window.location.href="hangqing-detail.html?id="+groupId;
+	}
+</script>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head style="background: white;">
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="./css/base/api.css" />
+    <script type="text/javascript" src="../static/qyScript/web/layer/layui.js"></script>
+    <script type="text/javascript" src="../static/qyScript/web/qyconfig.js"></script>
+
+
+</head>
+<body>
+  <div id="wrap">
+    <div id="header">
+
+    </div>
+    <div id="main">
+    </div>
+
+ </div>
+</body>
+
+<script type="text/javascript">
+
+//  //框架初始化
+  qySoftInit("../../static/qyScript/web/");
+//
+//  //apicloud 准备完成
+// apiready = function(){
+//
+//
+        layui.use(['qyWin'], function(){
+//
+             var qyWin = layui.qyWin;
+//
+//               api.setStatusBarStyle({
+//                    style: 'dark'
+//               });
+
+
+
+               qyWin.win("login","html/login.html",{});
+
+
+
+        });
+
+//    };
+
+
+</script>
+</html>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.md.dao.MdTradeMainDao">
+
+    <sql id="mdTradeMainColumns">
+        a.id AS "id",
+        a.group_id AS "groupId",
+        a.transaction_price AS "transactionPrice",
+        a.opening_price AS "openingPrice",
+        a.closing_price AS "closingPrice",
+        a.highest_price AS "highestPrice",
+        a.lowest_price AS "lowestPrice",
+        a.is_trans_day AS "isTransDay",
+        a.is_over_top AS "isOverTop",
+        a.amount AS "amount",
+        a.create_date AS "createDate",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag"
+    </sql>
+
+    <sql id="mdTradeMainJoins">
+
+    </sql>
+
+    <select id="get" resultType="MdTradeMain">
+        SELECT
+        <include refid="mdTradeMainColumns"/>
+        FROM md_trade_main a
+        <include refid="mdTradeMainJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getPublishByGroupId" resultType="MdTradeMain">
+        SELECT
+        <include refid="mdTradeMainColumns"/>
+        FROM md_trade_main a
+        <include refid="mdTradeMainJoins"/>
+        WHERE a.group_id = #{groupId}
+        ORDER BY create_date ASC
+        limit 1
+    </select>
+
+
+    <select id="getNowMoney" resultType="MdTradeMain">
+        SELECT
+        <include refid="mdTradeMainColumns"/>
+        FROM md_trade_main a
+        <include refid="mdTradeMainJoins"/>
+        WHERE a.group_id = #{groupId}
+        ORDER BY a.create_date DESC
+        LIMIT 1
+    </select>
+
+    <select id="sumTransDayGroupByGroupId" resultType="MdTradeMain">
+        SELECT
+        a.group_id AS "groupId",
+        count(a.group_id) AS "amount"
+        FROM md_trade_main a
+        <include refid="mdTradeMainJoins"/>
+        WHERE  a.is_trans_day = 1
+        GROUP BY a.group_id
+    </select>
+
+
+    <select id="findList" resultType="MdTradeMain">
+        SELECT
+        <include refid="mdTradeMainColumns"/>
+        FROM md_trade_main a
+        <include refid="mdTradeMainJoins"/>
+        <where>
+            <if test="groupId != null and groupId != ''">
+                AND a.group_id = #{groupId}
+            </if>
+            <if test="isTransDay != null and isTransDay != ''">
+                AND a.is_trans_day = #{isTransDay}
+            </if>
+            <if test="createDateTimeBegin != null and createDateTimeBegin != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i:%s') &gt;=  DATE_FORMAT(#{createDateTimeBegin}, '%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="createDateEnd != null and createDateEnd != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &lt;= DATE_FORMAT(#{createDateEnd}, '%Y-%m-%d')
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d') =  DATE_FORMAT(#{createDate}, '%Y-%m-%d')
+            </if>
+        </where>
+
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.create_date ASC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <insert id="insert">
+        INSERT INTO md_trade_main(
+        group_id,
+        transaction_price,
+        opening_price,
+        closing_price,
+        highest_price,
+        lowest_price,
+        is_trans_day,
+        is_over_top,
+        amount,
+        create_date,
+        update_date,
+        remarks,
+        del_flag
+        ) VALUES (
+        #{groupId},
+        #{transactionPrice},
+        #{openingPrice},
+        #{closingPrice},
+        #{highestPrice},
+        #{lowestPrice},
+        #{isTransDay},
+        #{isOverTop},
+        #{amount},
+        #{createDate},
+        #{updateDate},
+        #{remarks},
+        #{delFlag}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE md_trade_main SET
+        group_id = #{groupId},
+        transaction_price = #{transactionPrice},
+        opening_price = #{openingPrice},
+        closing_price = #{closingPrice},
+        highest_price = #{highestPrice},
+        lowest_price = #{lowestPrice},
+        is_over_top = #{isOverTop},
+        is_trans_day = #{isTransDay},
+        amount = #{amount},
+        create_date = #{createDate},
+        update_date = #{updateDate},
+        remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateIsOverTop">
+        UPDATE md_trade_main SET
+       is_over_top = #{isOverTop}
+        WHERE id = #{id}
+    </update>
+    <update id="updateClosingPrice">
+        UPDATE md_trade_main SET
+        closing_price = #{closePrice}
+        WHERE group_id = #{groupId} AND  DATE_FORMAT(create_date, '%Y-%m-%d') =   DATE_FORMAT(#{createDate}, '%Y-%m-%d')
+    </update>
+    <update id="delete">
+        delete from  md_trade_main
+        WHERE id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.star.dao.UserColectionDao">
+    
+	<sql id="userColectionColumns">
+		a.id AS "id",
+		a.user_name AS "userName",
+		a.group_id AS "groupId",
+		a.message AS "message",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="userColectionJoins">
+	</sql>
+    
+	<select id="get" resultType="UserColection">
+		SELECT 
+			<include refid="userColectionColumns"/>
+		FROM user_colection a
+		<include refid="userColectionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findByUserName" resultType="UserColection">
+		SELECT
+		<include refid="userColectionColumns"/>
+		FROM user_colection a
+		<include refid="userColectionJoins"/>
+		WHERE a.user_name = #{userName}
+	</select>
+
+	<select id="getByNameAndId" resultType="UserColection">
+		SELECT
+		<include refid="userColectionColumns"/>
+		FROM user_colection a
+		<include refid="userColectionJoins"/>
+		WHERE a.user_name = #{loginName}
+		AND   a.group_id = #{groupId}
+		LIMIT 1
+	</select>
+	
+	<select id="findList" resultType="UserColection">
+		SELECT 
+
+			<include refid="userColectionColumns"/>
+		FROM user_colection a
+		<include refid="userColectionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UserColection">
+		SELECT 
+			<include refid="userColectionColumns"/>
+		FROM user_colection a
+		<include refid="userColectionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO user_colection(
+			id,
+			user_name,
+			group_id,
+			message,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{userName},
+			#{groupId},
+			#{message},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE user_colection SET 	
+			user_name = #{userName},
+			group_id = #{groupId},
+			message = #{message},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		delete from user_colection
+		WHERE id = #{id}
+	</update>
+
+	<update id="cancelColection">
+		delete from user_colection
+		WHERE user_name = #{userName}
+		AND group_id = #{groupId}
+	</update>
+	
+</mapper>

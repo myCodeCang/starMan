@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>充值</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>充值</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+	<form method="post" action="" id="payForm">
+		<input name="userName" type="hidden" value="" id="userName">
+		<input name="isOrder" type="hidden" value="false">
+		<input name="isWeb" type="hidden" value="1">
+		<div class="aui-content aui-margin-t-10 recharge-money">
+		    <ul class="aui-list aui-form-list">
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="number" name="money" placeholder="点击输入充值金额" id="money">
+		                </div>
+		            </div>
+		        </li>
+		    </ul>
+		</div>
+	</form>
+		<div class="aui-content aui-margin-t-15 recharge">
+			<span class="recharge-text">选择金额</span>
+			<div class="aui-grid recharge-one">
+				<div class="aui-row">
+					<div class="aui-col-xs-4">
+						<div class="aui-btn aui-btn-block  money ">1000</div>
+					</div>
+					<div class="aui-col-xs-4">
+						<div class="aui-btn aui-btn-block  money ">3000</div>
+					</div>
+					<div class="aui-col-xs-4">
+						<div class="aui-btn aui-btn-block  money ">5000</div>
+					</div>
+					<div class="aui-col-xs-4">
+						<div class="aui-btn aui-btn-block  money ">10000</div>
+					</div>
+					<div class="aui-col-xs-4">
+						<div class="aui-btn aui-btn-block  money ">30000</div>
+					</div>
+					<div class="aui-col-xs-4">
+						<div class="aui-btn aui-btn-block  money ">50000</div>
+					</div>
+				</div>
+			</div>
+		    <ul class="aui-list aui-form-list recharge-two">
+		        <li class="aui-list-item">
+		        	<label>
+			            <div class="aui-list-item-inner">
+			            	<div class="aui-list-item-label">
+			                    <img src="../image/huanxun.png" style="width:1.5rem;"/>&nbsp;&nbsp;<span>环迅支付</span>
+			                </div>
+			                <div class="aui-list-item-input">
+			                    <input class="aui-radio aui-pull-right" type="radio" name="demo1"  value="huanxun" checked>
+			                </div>
+			            </div>
+		            </label>
+		        </li>
+
+				<li class="aui-list-item">
+					<label>
+						<div class="aui-list-item-inner">
+							<div class="aui-list-item-label">
+								<img src="../image/zhifubao.png" style="width:1.5rem;"/>&nbsp;&nbsp;<span>支付宝支付</span>
+							</div>
+							<div class="aui-list-item-input">
+								<input class="aui-radio aui-pull-right" type="radio" name="demo1" value="alipay" checked>
+							</div>
+						</div>
+					</label>
+				</li>
+				<li class="aui-list-item">
+					<label>
+						<div class="aui-list-item-inner">
+							<div class="aui-list-item-label">
+								<img src="../image/yinglian.png" style="width:1.5rem;"/>&nbsp;&nbsp;<span>快捷支付</span>
+							</div>
+							<div class="aui-list-item-input">
+								<input class="aui-radio aui-pull-right" type="radio" name="demo1" value="quickpay" >
+							</div>
+						</div>
+					</label>
+				</li>
+				<!--<li class="aui-list-item">-->
+					<!--<label>-->
+						<!--<div class="aui-list-item-inner">-->
+							<!--<div class="aui-list-item-label">-->
+								<!--<img src="../image/zhifubao.png" style="width:1.5rem;"/>&nbsp;&nbsp;<span>支付宝支付</span>-->
+							<!--</div>-->
+							<!--<div class="aui-list-item-input">-->
+								<!--<input class="aui-radio aui-pull-right" type="radio" name="demo1" checked>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</label>-->
+				<!--</li>-->
+		        <!--<li class="aui-list-item">-->
+		        	<!--<label>-->
+			            <!--<div class="aui-list-item-inner">-->
+			            	<!--<div class="aui-list-item-label">-->
+			                    <!--<img src="../image/weixin.png" style="width:1.5rem;"/>&nbsp;&nbsp;<span>微信支付</span>-->
+			                <!--</div>-->
+			                <!--<div class="aui-list-item-input">-->
+			                    <!--<input class="aui-radio aui-pull-right" type="radio" name="demo1">-->
+			                <!--</div>-->
+			            <!--</div>-->
+		            <!--</label>-->
+		        <!--</li>-->
+		        <!--<li class="aui-list-item">-->
+		        	<!--<label>-->
+		            <!--<div class="aui-list-item-inner">-->
+		            	<!--<div class="aui-list-item-label">-->
+		                    <!--<img src="../image/yinlian.png" style="width:1.5rem;"/>&nbsp;&nbsp;<span>微信支付</span>-->
+		                <!--</div>-->
+		                <!--<div class="aui-list-item-input">-->
+		                    <!--<input class="aui-radio aui-pull-right" type="radio" name="demo1">-->
+		                <!--</div>-->
+		            <!--</div>-->
+		            <!--</label>-->
+		        <!--</li>-->
+		    </ul>
+		    <!--<div class="recharge-three">-->
+		    	<!--<p><span>刘** </span>&nbsp;&nbsp;&nbsp;<span>工商银行</span>&nbsp;&nbsp;&nbsp;<span>622202********2012</span></p>-->
+		    	<!--<p><span>刘** </span>&nbsp;&nbsp;&nbsp;<span>工商银行</span>&nbsp;&nbsp;&nbsp;<span>622202********2012</span></p>-->
+		    	<!--<p><span>刘** </span>&nbsp;&nbsp;&nbsp;<span>工商银行</span>&nbsp;&nbsp;&nbsp;<span>622202********2012</span></p>-->
+		    <!--</div>-->
+		</div>
+		<div class="aui-content name-but">
+			<div class="aui-btn aui-btn-block" onclick="pay()">立即充值</div>
+		</div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+	</body>
+	<script type="text/javascript">
+	//框架初始化
+	qySoftInit("../../static/qyScript/web/");
+
+	//apicloud 准备完成
+
+	layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+	function initpage(){
+        $('.money').on('click', function () {
+            $("#money").val($(this).html());
+			$('.money').removeClass('active');
+			$(this).addClass('active');
+		});
+        userInfo();
+	}
+	
+	function userInfo() {
+        layui.qyForm.qyajax("/f/app/userinfo/userinfo",{},function(data){
+			$("#userName").val(data.user.userName);
+        });
+    }
+
+	function pay() {
+        var money = $('#money').val();
+        var payType=$("input[name='demo1']:checked").val();
+        if (!/^[1-9][0-9]*$/.test(money)) {
+           layui.qyWin.toast('充值金额必须是大于0的整数');
+           return;
+        }
+        if(payType=="alipay"){
+            layui.qyForm.qyajax("/f/payment/starpay/lianlianPay",{money:money},function(data){
+                layui.qyWin.win("lianlianPay","lianlianPay.html?url="+data.url,{});
+            });
+		}
+        if(payType=="quickpay"){
+            layui.qyForm.qyajax("/f/payment/starpay/lianlianPayCheck",{},function(data){
+                window.location=CONS_AJAX_URL+"/f/payment/starpay/quickPay?money="+money;
+            });
+
+
+        }
+        if(payType=="huanxun"){
+            $("#payForm").attr("action", CONS_AJAX_URL+"/f/payment/pay/huanxunPay");
+            $("#payForm").submit();
+        }
+
+
+
+//        $("#payForm").attr("action", CONS_AJAX_URL+"f/payment/pay/lianlianPay");
+//        $("#payForm").submit();
+    }
+	</script>
+</html>

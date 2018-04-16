@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>添加银行卡</title>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../static/qyScript/web/layer/css/layer-mobile.css"/>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn back" href="javascript :history.back(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>添加银行卡</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content add">
+		    <ul class="aui-list aui-form-list">
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-input">
+							<select id = "temp-select">
+								<option>请选择所属银行</option>
+							</select>
+						</div>
+					</div>
+				</li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="请输入您的开户行名称" id="bankUserAddress" >
+		                </div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="请输入户主名称" id= "bankUserName">
+		                </div>
+		            </div>
+		        </li>
+
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="请输入银行卡卡号" id= "bankUserNum">
+		                </div>
+		            </div>
+		        </li>
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-input">
+							<input type="text" placeholder="请确认银行卡卡号" id= "bankUserNum2">
+						</div>
+					</div>
+				</li>
+		    </ul>
+		</div>    
+		<div class="aui-content add-but">
+			<div class="aui-btn aui-btn-block" onclick="save()">保存</div>
+		</div>
+	</body>
+	<script  type="text/html" id="tpl-select">
+		{{each bankList}}
+		<option value="{{$value.bankCode}}">{{$value.bankName}}</option>
+		{{/each}}
+
+	</script>
+
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+
+        //apicloud 准备完成
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            var qyWin  = layui.qyWin;
+
+            //qyWin.fixStatusBar("header");
+            selectloadData();
+
+        }
+
+        function selectloadData(){
+            layui.qyForm.qyajax("/f/app/userinfo/bankList",{},function(data){
+                var html = template('tpl-select', data);
+                $("#temp-select").append(html);
+            });
+        }
+
+        function save(){
+
+            var bankUserName = $("#bankUserName").val();
+            var bankUserAddress = $("#bankUserAddress").val();
+            var bankCode = $("#temp-select").val();
+            var bankUserNum =  $("#bankUserNum").val();
+            var bankUserNum2 =  $("#bankUserNum2").val();
+            if(bankUserName == "" || bankCode == "" || bankUserNum == ""){
+                layui.qyWin.toast("请将信息填写完整!");
+                return ;
+            }
+            if(bankUserNum != bankUserNum2){
+                layui.qyWin.toast("两次卡号输入不一致!");
+                return ;
+            }
+            var data = {
+                bankUserAddress : bankUserAddress,
+                bankUserName : bankUserName,
+                bankCode : bankCode,
+                bankUserNum : bankUserNum
+            }
+            layui.layer.open({
+                content: '您确定要绑定吗？'
+                ,btn: ['确认', '取消']
+                ,yes: function(index){
+                    layui.qyForm.qyajax("/f/app/userinfo/updateUserBank",data,function(res){
+                        layui.qyWin.toast(res.info);
+                        setTimeout("location.href=document.referrer;",1000);
+                    });
+                    layui.layer.close(index);
+                }
+            });
+
+
+
+        }
+	</script>
+</html>

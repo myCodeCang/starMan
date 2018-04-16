@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>登录</title>
+	<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+	<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+	<style>
+		body{width:100%;height:100%;}
+	</style>
+</head>
+<body>
+<!--<header class="aui-bar aui-bar-nav home">-->
+	<!--<a class="aui-pull-left aui-btn">-->
+		<!--<span class="aui-iconfont aui-icon-left"></span>-->
+	<!--</a>-->
+	<!--<div class="aui-title">-->
+		<!--<span>登录</span>-->
+	<!--</div>-->
+	<!--<a class="aui-pull-right aui-btn">-->
+		<!--<span class="sangedian"></span>-->
+	<!--</a>-->
+<!--</header>-->
+<!--<div class="height-one"></div>-->
+<style>
+	html{width:100%;height: 100%;}
+	body{background: url(../image/login-bg.png);background-repeat:no-repeat;background-size:cover;width: 100%;height: 100%;background-position:50% 50%;}
+</style>
+<div class="aui-content login-logo">
+	<img src="../image/MingXingLogo.png"/>
+</div>
+<div class="aui-content login-one">
+	<ul class="aui-list aui-form-list">
+		<li class="aui-list-item">
+			<div class="aui-list-item-inner">
+				<div class="aui-list-item-input">
+					<input type="text" placeholder="请输入手机号" id="username" name="username" value="">
+				</div>
+			</div>
+		</li>
+		<li class="aui-list-item">
+			<div class="aui-list-item-inner">
+				<div class="aui-list-item-input">
+					<input type="password" placeholder="请输入密码" id="password" name="password" value="">
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>
+<div class="aui-content login-but-one" onclick="login()">
+	<div class="aui-btn aui-btn-block">登 录</div>
+</div>
+<div class="aui-content login-jizhu-one">
+	<div class="aui-list">
+		<div class="aui-list-item-text">
+			<div class="aui-list-item-title">
+				<label><input class="aui-checkbox" checked="" type="checkbox" id="rempwd">&nbsp;记住密码</label>
+			</div>
+			<div class="aui-list-item-right aui-margin-r-5"><a href="forget-pass.html">忘记密码</a></div>
+		</div>
+	</div>
+	<p class="login-register" onclick="register()"><span>立即注册</span></p>
+</div>
+
+</body>
+<script type="text/javascript">
+    var loginFlag = false;
+
+    //框架初始化
+    qySoftInit("../../static/qyScript/web/");
+
+    //apicloud 准备完成
+    layui.use(['qyWin','qyForm','qyShop','layer'], initpage);
+    function initpage(){
+        var qyWin  = layui.qyWin;
+		layui.layer.open({
+			title:'提示',
+			content:'测试版本',
+            shadeClose: false
+		});
+        var username = layui.qyWin.getPrefs("username");
+        var password = layui.qyWin.getPrefs("password");
+        var rempwd = layui.qyWin.getPrefs("rempwd");
+        if(rempwd==1){
+            $("#username").val(username);
+            $("#password").val(password);
+            $("#rempwd").attr('checked','checked');
+        }
+
+
+    }
+    function login(){
+        var username = $("#username").val();
+        var password = $("#password").val();
+
+        if(!username){
+            layui.qyWin.toast("请输入用户名!");
+            return ;
+        }
+        if(!password){
+            layui.qyWin.toast("请输入密码!");
+            return ;
+        }
+
+        if(loginFlag){
+            return;
+        }
+
+        loginFlag = true;
+
+        var data = {
+            username : username,
+            password : password,
+            mobileLogin:"true",
+            userType:"website",
+            login:"true"
+
+        }
+
+        layui.qyForm.qyajax("/f/login",data,function() {
+                   // layui.qyShop.shopLogin(shopid,username,password,function(ret){
+                   //     if(ret){
+            layui.qyWin.toast("登录成功!");
+            loginFlag = false;
+            //设定偏好数据
+            if ($("#rempwd").get(0).checked) {
+                layui.qyWin.setPrefs("username", username, 365);
+                layui.qyWin.setPrefs("password", password, 365);
+                layui.qyWin.setPrefs("rempwd", 1, 365);
+            } else {
+                layui.qyWin.setPrefs("username", "");
+                layui.qyWin.setPrefs("password", "");
+                layui.qyWin.setPrefs("rempwd", "");
+            }
+            setTimeout(function () {
+                layui.qyWin.win("Index", "index.html", {});
+
+//              window.location.href=CONS_QY_SHOP_URL+"/app/index.php?i="+shopid+"&c=entry&m=ewei_shopv2&do=mobile";
+            }, 1000);
+		// 	}
+		// 	else{
+		// 		layui.qyWin.toast("用户名或密码错误!!!");
+		// 		loginFlag = false;
+		// 	}
+		// });
+       },function(){
+           loginFlag = false;
+       });
+
+    }
+    
+    function register() {
+		layui.qyWin.win("register",CONS_AJAX_URL+"/f/register",{})
+    }
+</script>
+</html>

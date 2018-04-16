@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.star.dao.StarProjectDao">
+    
+	<sql id="starProjectColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.group_id AS "groupId",
+		a.status AS "status",
+		a.image AS "image",
+		a.time AS "time",
+		a.detail AS "detail",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		b.name AS "starName"
+	</sql>
+	
+	<sql id="starProjectJoins">
+		LEFT JOIN base_goods_group b ON b.id = a.group_id
+	</sql>
+    
+	<select id="get" resultType="StarProject">
+		SELECT 
+			<include refid="starProjectColumns"/>
+		FROM star_project a
+		<include refid="starProjectJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="StarProject">
+		SELECT 
+
+			<include refid="starProjectColumns"/>
+		FROM star_project a
+		<include refid="starProjectJoins"/>
+		<where>
+			b.status >= 0
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="starName != null and starName != ''">
+				AND b.name = #{starName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="StarProject">
+		SELECT 
+			<include refid="starProjectColumns"/>
+		FROM star_project a
+		<include refid="starProjectJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO star_project(
+			id,
+			name,
+			group_id,
+			status,
+			image,
+			time,
+			detail,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{name},
+			#{groupId},
+			#{status},
+			#{image},
+			#{time},
+			#{detail},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE star_project SET
+			name = #{name},
+			group_id = #{groupId},
+			status = #{status},
+			image = #{image},
+			time = #{time},
+			detail = #{detail},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM star_project
+		WHERE id = #{id}
+	</delete>
+	
+</mapper>

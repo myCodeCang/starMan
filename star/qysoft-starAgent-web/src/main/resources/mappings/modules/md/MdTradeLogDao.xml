@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.md.dao.MdTradeLogDao">
+
+    <sql id="mdTradeLogColumns">
+        a.id AS "id",
+        a.group_id AS "groupId",
+        a.user_id AS "userId",
+        a.user_name AS "userName",
+        a.price AS "price",
+        a.amount AS "amount",
+        a.profit AS "profit",
+        a.is_check AS "isCheck",
+        a.type AS "type",
+        a.message AS "message",
+        a.create_date AS "createDate",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag",
+        b.name AS "name",
+        u.true_name AS "trueName",
+        u.user_type AS "userType",
+        u.shop_id AS "shopId",
+        u.remarks AS "userRemarks"
+    </sql>
+
+    <sql id="mdTradeLogJoins">
+        LEFT JOIN base_goods_group b ON b.id = a.group_id
+        LEFT JOIN user_userinfo u ON u.user_name = a.user_name
+    </sql>
+
+    <select id="get" resultType="MdTradeLog">
+        SELECT
+        <include refid="mdTradeLogColumns"/>
+        FROM md_trade_log a
+        <include refid="mdTradeLogJoins"/>
+        WHERE a.id = #{id}
+    </select>
+    <select id="findList" resultType="MdTradeLog">
+        SELECT
+        <include refid="mdTradeLogColumns"/>
+        FROM md_trade_log a
+        <include refid="mdTradeLogJoins"/>
+        <where>
+            <if test="userId != null and userId != ''">
+                AND a.user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND a.user_name = #{userName}
+            </if>
+            <if test="groupId != null and groupId != ''">
+                AND a.group_id = #{groupId}
+            </if>
+            <if test="isCheck != null and isCheck != ''">
+                AND a.is_check = #{isCheck}
+            </if>
+            <if test="type != null and type != ''">
+                AND a.type = #{type}
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d') = DATE_FORMAT(#{createDate}, '%Y-%m-%d')
+            </if>
+            <if test="createDateBegin != null and createDateBegin != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i:%s') &gt;=   DATE_FORMAT(#{createDateBegin}, '%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="createDateEnd != null and createDateEnd != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i:%s') &lt;=   DATE_FORMAT(#{createDateEnd}, '%Y-%m-%d %H:%i:%s')
+            </if>
+        </where>
+
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.create_date DESC , a.time_stamp DESC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="findChildVolume" resultType="MdTradeLog">
+        SELECT
+        a.user_name,a.user_id,IFNULL(sum(a.price*a.amount+a.profit) ,0)AS 'volume',u.parent_list AS 'parentListLike',u.shop_id AS 'shopId'
+        FROM md_trade_log a
+        LEFT JOIN user_userinfo u ON u.user_name = a.user_name
+        <where>
+            <if test="createDate != null and createDate != ''">
+            DATE_FORMAT(a.create_date, '%Y-%m-%d') = DATE_FORMAT(#{createDate}, '%Y-%m-%d')
+            </if>
+            <if test="createDateBegin != null and createDateBegin != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &gt;=   DATE_FORMAT(#{createDateBegin}, '%Y-%m-%d')
+            </if>
+            <if test="createDateEnd != null and createDateEnd != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &lt;=   DATE_FORMAT(#{createDateEnd}, '%Y-%m-%d')
+            </if>
+        </where>
+        GROUP BY a.user_name
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="realTimeList" resultType="MdTradeLog">
+        SELECT
+        a.id AS "id",
+        a.group_id AS "groupId",
+        a.price AS "price",
+        a.amount AS "amount",
+        a.create_date AS "createDate"
+        FROM md_trade_log a
+        <where>
+            <if test="groupId != null and groupId != ''">
+                AND a.group_id = #{groupId}
+            </if>
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d') =   DATE_FORMAT(#{date}, '%Y-%m-%d')
+            AND a.type = 1
+        </where>
+        ORDER BY a.create_date DESC LIMIT #{limit}
+    </select>
+
+    <select id="findEchartsList" resultType="MdTradeLog">
+        SELECT
+        a.id AS "id",
+        a.group_id AS "groupId",
+        IFNULL(sum(a.amount),0) AS "amountSum",
+        a.create_date AS "createDate"
+        FROM md_trade_log a
+        <where>
+            <if test="groupId != null and groupId != ''">
+                AND a.group_id = #{groupId}
+            </if>
+            <if test="createDateBegin != null and createDateBegin != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &gt;=   DATE_FORMAT(#{createDateBegin}, '%Y-%m-%d')
+            </if>
+            <if test="createDateEnd != null and createDateEnd != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &lt;=   DATE_FORMAT(#{createDateEnd}, '%Y-%m-%d')
+            </if>
+        </where>
+        GROUP BY DATE_FORMAT(a.create_date, '%Y-%m-%d')
+    </select>
+
+    <select id="findLastTradeLog" resultType="MdTradeLog">
+        SELECT
+        a.group_id AS "groupId",
+        a.create_date AS "createDate"
+        FROM md_trade_log a
+        <where>
+            a.group_id = #{groupId}
+        </where>
+        AND DATE_FORMAT(a.create_date, '%Y-%m-%d') = DATE_FORMAT(#{createDate}, '%Y-%m-%d')
+        ORDER BY a.id DESC Limit 1
+    </select>
+
+    <select id="getProfitByDate" resultType="MdTradeLog">
+        SELECT
+       SUM(a.profit) AS 'sumProfit'
+       FROM md_trade_log a
+       WHERE DATE_FORMAT(a.create_date, '%Y-%m-%d') &gt;=   DATE_FORMAT(#{createDateBegin}, '%Y-%m-%d')
+       AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &lt;=   DATE_FORMAT(#{createDateEnd}, '%Y-%m-%d')
+    </select>
+
+    <select id="findKunSunRanklist" resultType="MdTradeLog">
+    select
+    a.user_name AS "userName",
+    u.true_name AS "trueName",
+        u.shop_id AS "shopId",
+        u.remarks AS "userRemarks",
+    IFNULL((b.sell - a.buy),0) AS "price",
+    IFNULL(a.buy,0) AS "sumBuy",
+    IFNULL(b.sell,0)  AS "sumSell"
+    FROM((SELECT user_name,group_id , SUM(price * amount) AS "buy" FROM md_trade_log  WHERE type = 1 GROUP BY user_name) a
+    LEFT JOIN (SELECT user_name,group_id , SUM(price * amount) AS "sell" FROM md_trade_log WHERE type = 2 GROUP BY user_name) b ON a.user_name = b.user_name)
+    LEFT JOIN user_userinfo u ON u.user_name = a.user_name
+        <where>
+            <if test="parentListLike != null and parentListLike != ''">
+                AND u.parent_list like concat('%/',#{parentListLike},'/%')
+            </if>
+            <if test="userName != null and userName != ''">
+                AND a.user_name = #{userName}
+            </if>
+            <if test="userRemarks != null and userRemarks != ''">
+                AND u.remarks = #{userRemarks}
+            </if>
+        </where>
+    <choose>
+        <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+            ORDER BY ${page.orderBy}
+        </when>
+        <otherwise>
+            ORDER BY (b.sell - a.buy) DESC
+        </otherwise>
+    </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO md_trade_log(
+        group_id,
+        user_id,
+        is_check,
+        user_name,
+        price,
+        amount,
+        profit,
+        type,
+        message,
+        create_date,
+        update_date,
+        remarks,
+        del_flag
+        ) VALUES (
+        #{groupId},
+        #{userId},
+        #{isCheck},
+        #{userName},
+        #{price},
+        #{amount},
+        #{profit},
+        #{type},
+        #{message},
+        #{createDate},
+        #{updateDate},
+        #{remarks},
+        #{delFlag}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE md_trade_log SET
+        user_id = #{userId},
+        user_name = #{userName},
+        is_check = #{isCheck},
+        group_id = #{groupId},
+        amount = #{amount},
+        profit = #{profit},
+        price = #{price},
+        message = #{message},
+        type = #{type},
+        update_date = #{updateDate},
+        remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        delete from  md_trade_log
+        WHERE id = #{id}
+    </update>
+</mapper>

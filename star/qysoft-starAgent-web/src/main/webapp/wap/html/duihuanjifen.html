@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>积分兑换</title>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../static/qyScript/web/layer/css/layer-mobile.css"/>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn back" href="javascript :history.back(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>兑换积分</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn" onclick="jilu()">-->
+		        <!--<span class="ico-duihuan"></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content duihuan-shuoming">
+			<span class="text-red">说明：</span>
+			<span class="text-red">兑换积分，只能使用所有持有的时间进行兑换，一经兑换，不能更改，不能转让，只能在积分商城进行消费。积分兑换比例为发行价乘时间数量乘<span style="display: inline" id="scale"></span>。</span>
+		</div>
+		<div class="aui-content duihuan-detail aui-margin-b-15">
+			<div class="aui-grid">
+				<i class="duihuan-img"></i>
+				<div class="aui-row">
+					<div class="aui-col-xs-6">
+						<span class="text-red" id="myTime"></span>
+						<span>我的时间</span>
+					</div>
+					<div class="aui-col-xs-6">
+						<span class="text-red" id="score"></span>
+						<span>可兑积分</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-content duihuan-jifen">
+			<ul class="aui-list aui-form-list">
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-label text-blue">
+		                    我要兑换：
+		                </div>
+		                <div class="aui-list-item-input">
+		                    <input id="num" type="number" min="1" placeholder="请输入你要兑换的时间数量">
+		                </div>
+		            </div>
+		        </li>
+		    </ul>    
+		</div>
+		<div class="aui-content duihuan-but">
+			<div class="aui-btn aui-btn-block" onclick="exchange()">兑换</div>
+		</div>
+		<div class="aui-content jilu">
+			<a onclick="jilu()">积分记录</a>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        var myTime;
+		var exchangeNum;
+		var groupId;
+		var goodsId;
+		var saveFlag = false;
+        //apicloud 准备完成
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            groupId = layui.qyForm.GetQueryString("groupId");
+            goodsId = layui.qyForm.GetQueryString("goodsId");
+            var qyWin  = layui.qyWin;
+            getMessage();
+        }
+
+        function getMessage(){
+            //获得秒数
+            layui.qyForm.qyajax("/f/star/attorn/getStarNum",{groupId:groupId},function(data){
+				if(data.transGoods == ""){
+                    $("#myTime").html(0+" 秒");
+                    $("#score").html(0+" 个");
+				}else {
+				    myTime = data.transGoods.num;
+                    $("#myTime").html(data.transGoods.num + " 秒");
+                    $("#score").html(data.chaExchangeNum + " 个");
+                }
+                $("#scale").html(data.scale);
+            })
+        }
+        function exchange() {
+            exchangeNum = $("#num").val();
+            if (!/^[1-9][0-9]*$/.test(exchangeNum)) {
+                layui.qyWin.toast('数量必须是大于0的整数');
+                return;
+            }
+            layui.layer.open({
+                content: '您确定要兑换吗？'
+                , btn: ['确认', '取消']
+                , yes: function (index) {
+                    if(saveFlag){
+                        return;
+					}
+					saveFlag = true;
+                    layui.qyForm.qyajax("/f/star/attorn/exchangeScore", {
+                        exchangeNum: exchangeNum,
+                        groupId: groupId,
+						goodsId:goodsId
+                    }, function (res) {
+                        layui.qyWin.toast(res.info);
+                        $("#num").val("");
+                        setTimeout(function () {
+							saveFlag = false;
+                        })
+                        initpage();
+                    },function () {
+                        setTimeout(function () {
+                            saveFlag = false;
+                        })
+                    });
+                }
+            });
+        }
+		function jilu() {
+			layui.qyWin.win("jifenjilu","jifenjilu.html",{}	);
+        }
+
+	</script>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>昵称</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+	</head>
+	<body>
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>昵称</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content aui-margin-t-10 name">
+		    <ul class="aui-list aui-form-list">
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="请输入您要修改的昵称" id="nickName">
+		                </div>
+		            </div>
+		        </li>
+		    </ul>
+		</div>    
+		<div class="aui-content name-but">
+			<div class="aui-btn aui-btn-block" onclick="save()">保存</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        layui.use(['qyWin','qyForm','qyShop'], initpage);
+        function initpage(){
+
+        }
+        function save(){
+            var nickName = $("#nickName").val();
+            layui.qyForm.qyajax("/f/app/userinfo/updateNickName",{'nickName':nickName},function(data){
+                layui.qyWin.toast("恭喜您修改成功!");
+                setTimeout("layui.qyWin.win(\"\",'wanshanziliao.html',{})",1500)
+            });
+		}
+	</script>
+</html>

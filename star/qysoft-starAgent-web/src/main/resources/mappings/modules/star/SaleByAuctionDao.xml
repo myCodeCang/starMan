@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.star.dao.SaleByAuctionDao">
+    
+	<sql id="saleByAuctionColumns">
+		a.id AS "id",
+		a.group_id AS "groupId",
+		a.num AS "num",
+		a.money AS "money",
+		a.norm_money AS "normMoney",
+		a.now_money	AS "nowMoney",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.status AS "status",
+		a.succeed_user AS "succeedUser",
+		a.detail AS "detail",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		b.id AS "baseGoodsGroup.id",
+		b.name AS "baseGoodsGroup.name",
+		b.description AS "baseGoodsGroup.description",
+		b.thumb AS "baseGoodsGroup.thumb",
+		s.classifyName AS "classify"
+	</sql>
+
+	<sql id="saleByAuctionColumnsLock">
+		a.id AS "id",
+		a.group_id AS "groupId",
+		a.num AS "num",
+		a.money AS "money",
+		a.norm_money AS "normMoney",
+		a.now_money	AS "nowMoney",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.status AS "status",
+		a.succeed_user AS "succeedUser",
+		a.detail AS "detail",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="saleByAuctionJoins">
+		LEFT JOIN base_goods_group b ON a.group_id = b.id
+		LEFT JOIN shop_classify s ON b.category_id = s.id
+	</sql>
+    
+	<select id="get" resultType="SaleByAuction">
+		SELECT
+			<include refid="saleByAuctionColumns"/>
+		FROM sale_by_auction a
+		<include refid="saleByAuctionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByLock" resultType="SaleByAuction">
+		SELECT
+		<include refid="saleByAuctionColumnsLock"/>
+		FROM sale_by_auction a
+		WHERE a.id = #{id}
+		for UPDATE
+	</select>
+
+	<select id="getByGroupId" resultType="SaleByAuction">
+		SELECT
+		<include refid="saleByAuctionColumns"/>
+		FROM sale_by_auction a
+		<include refid="saleByAuctionJoins"/>
+		WHERE a.group_id = #{groupId}
+		LIMIT 1
+	</select>
+
+	<select id="findList" resultType="SaleByAuction">
+		SELECT 
+
+			<include refid="saleByAuctionColumns"/>
+		FROM sale_by_auction a
+		<include refid="saleByAuctionJoins"/>
+		<where>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="endTimeAfter != null and endTimeAfter != ''">
+				AND DATE_FORMAT(a.end_time, '%Y-%m-%d %H:%i:%s') &lt;= DATE_FORMAT(#{endTimeAfter}, '%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SaleByAuction">
+		SELECT 
+			<include refid="saleByAuctionColumns"/>
+		FROM sale_by_auction a
+		<include refid="saleByAuctionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sale_by_auction(
+			id,
+			group_id,
+			num,
+			money,
+			norm_money,
+			now_money,
+			start_time,
+			end_time,
+			status,
+			succeed_user,
+			detail,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{groupId},
+			#{num},
+			#{money},
+			#{normMoney},
+			#{nowMoney},
+			#{startTime},
+			#{endTime},
+			#{status},
+			#{succeedUser},
+			#{detail},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sale_by_auction SET 	
+			group_id = #{groupId},
+			num = #{num},
+			money = #{money},
+			norm_money = #{normMoney},
+			now_money = #{nowMoney},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			status = #{status},
+			succeed_user = #{succeedUser},
+			detail = #{detail},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateNowMoney">
+		UPDATE sale_by_auction SET
+		now_money = #{nowMoney},
+		succeed_user = #{succeedUser}
+		WHERE id = #{id}
+	</update>
+	<update id="updateStatus">
+		UPDATE sale_by_auction SET
+		status = #{status}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE from sale_by_auction
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

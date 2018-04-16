@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>兑换详情</title>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../static/qyScript/web/layer/css/layer-mobile.css"/>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn back" href="javascript :history.back(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>兑换详情</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class="ico-duihuan" onclick="jilu()"></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content convert">
+			<div class="convert-img" id="img">
+
+			</div>
+			<h3 id="titleOne"></h3>
+		</div>
+		<div class="aui-content convert-detail">
+			<h3 id="titleTwo"></h3>
+			<!--<p>-->
+				<!--<span class="aui-pull-left">兑换所需：<span class="text-red" id="needNum"></span></span>-->
+				<!--<span class="aui-pull-right">剩余10份/总共10份</span>-->
+			<!--</p>-->
+			<p class="aui-margin-b-15">
+				<span class="aui-pull-left">当前持有：<span class="text-red" id="haveTime"></span></span>
+				<span class="aui-pull-right aui-btn" onclick="toExchange()">立即兑换</span>
+			</p>
+			<div class="con-detail">
+				<h3>详情</h3>
+				<p id="detail">
+
+				</p>
+			</div>
+		</div>
+		<div class="aui-content jilu">
+			<a onclick="jilu()">兑换记录</a>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        var proId; //产品表id
+		var groupId;
+        var goodsId;
+		var needNum;
+		var num;
+		var saveFlag = false;
+        //apicloud 准备完成
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            var qyWin  = layui.qyWin;
+            var qyForm = layui.qyForm;
+            proId = layui.qyForm.GetQueryString("id");
+            groupId = layui.qyForm.GetQueryString("groupId");
+            layui.qyForm.qyajax("/f/star/attorn/getStarNum",{groupId:groupId},function(data){
+                if(data.transGoods == ""){
+                    $("#haveTime").html("0 秒");
+                    num = 0;
+				}else{
+                    $("#haveTime").html(data.transGoods.num+" 秒");
+                    goodsId = data.transGoods.id;
+                    num = data.transGoods.num;
+				}
+
+			})
+			findStarDetail();
+        }
+        function findStarDetail() {
+            layui.qyForm.qyajax("/f/star/attorn/getProduct",{id:proId},function(data){
+				needNum = data.product.time;
+                $("#titleOne").html(data.product.time+"秒 "+data.product.name);
+                $("#titleTwo").html(data.product.time+"秒 "+data.product.name);
+                $("#needNum").html(data.product.time+"秒");
+                $("#detail").html(data.product.detail);
+                var url = CONS_IMG_URL + data.product.image;
+                $("#img").html('<img src="'+url+'">');
+
+			})
+        }
+
+        function toExchange() {
+            layui.layer.open({
+                content: '您确定要兑换吗？'
+                ,btn: ['确认', '取消']
+                ,yes: function(index) {
+					if(saveFlag){
+                        return;
+					}
+					saveFlag = true;
+                    layui.qyForm.qyajax("/f/star/attorn/exchangeProject", {groupId:groupId,id: proId,goodsId:goodsId}, function (res) {
+                        layui.qyWin.toast(res.info);
+                        setTimeout(function () {
+							saveFlag = false;
+                        })
+                        initpage();
+                    },function () {
+                        setTimeout(function () {
+                            saveFlag = false;
+                        })
+                    })
+					layui.layer.close(index);
+                }
+                });
+        }
+		function jilu() {
+			layui.qyWin.win("duihuanlishi","duihuanlishi.html",{});
+        }
+	</script>
+</html>

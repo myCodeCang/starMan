@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.trans.dao.TransGoodsDao">
+
+	<sql id="transGoodsColumnNormal">
+		a.id AS "id",
+		a.group_id AS "groupId",
+		a.user_name AS "userName",
+		a.status AS "status",
+		a.buy_money AS "buyMoney",
+		a.sell_money AS "sellMoney",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.sell_time AS "sellTime",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.buy_id as "buyId",
+		a.ischeck as "ischeck",
+		a.goods_no as "goodsNo",
+		a.trans_num as "transNum",
+		a.num as "num"
+	</sql>
+    
+	<sql id="transGoodsColumns">
+		a.id AS "id",
+		a.group_id AS "groupId",
+		a.user_name AS "userName",
+		a.status AS "status",
+		a.buy_money AS "buyMoney",
+		a.sell_money AS "sellMoney",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.sell_time AS "sellTime",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		tgg.name AS "name",
+		tgg.money AS "baseMoney",
+		u.true_name AS "trueName",
+		u.shop_id AS "shopId",
+		u.remarks AS "userRemark",
+		a.buy_id as "buyId",
+		a.ischeck as "ischeck",
+		a.goods_no as "goodsNo",
+		a.trans_num as "transNum",
+		a.num as "num"
+	</sql>
+
+	<sql id="transGoodsJoins">
+		LEFT JOIN user_userinfo u ON u.user_name = a.user_name
+		LEFT JOIN base_goods_group tgg ON tgg.id = a.group_id
+	</sql>
+
+	<select id="getUserStar" resultType="TransGoods">
+		SELECT
+		<include refid="transGoodsColumns"/>
+		FROM trans_goods a
+		<include refid="transGoodsJoins"/>
+		WHERE a.group_id = #{groupId} AND a.user_name = #{userName}
+		limit 1
+	</select>
+
+	<select id="get" resultType="TransGoods">
+		SELECT
+			<include refid="transGoodsColumns"/>
+		FROM trans_goods a
+		<include refid="transGoodsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	<select id="getLock" resultType="TransGoods">
+		SELECT
+		<include refid="transGoodsColumnNormal"/>
+		FROM trans_goods a
+		WHERE a.id = #{id}
+		FOR UPDATE
+	</select>
+
+	<select id="getGoodsNumReport" resultType="TransGoodsNumReport">
+		SELECT
+		IFNULL(a.num,0) AS "goodsNum",
+		IFNULL(b.num,0) AS	"zero",
+		IFNULL(c.num,0) AS	"one",
+		IFNULL(d.num,0) AS "two",
+		IFNULL(e.num,0) AS "three",
+		IFNULL(f.num,0) AS "four",
+		IFNULL(g.num,0)	AS "five",
+		IFNULL(h.num,0)	AS "more",
+		IFNULL(i.num,0)	AS "pickNum",
+		IFNULL(FORMAT(j.money,2),0) AS "avePrice"
+		FROM
+		(SELECT group_id ,COUNT(trans_num) as "num" FROM trans_goods  WHERE group_id = #{groupId} and status in (1,2,4) GROUP BY group_id )a
+		LEFT JOIN (SELECT group_id ,COUNT(trans_num) as "num"  FROM trans_goods  WHERE trans_num = 0 and status in (1,2) GROUP BY group_id ) b ON a.group_id = b.group_id
+		LEFT JOIN (SELECT group_id ,COUNT(trans_num) as "num"  FROM trans_goods  WHERE trans_num = 1 and status in (1,2) GROUP BY group_id ) c ON a.group_id = c.group_id
+		LEFT JOIN (SELECT group_id ,COUNT(trans_num) as "num"  FROM trans_goods  WHERE trans_num = 2 and status in (1,2) GROUP BY group_id ) d ON a.group_id = d.group_id
+		LEFT JOIN (SELECT group_id ,COUNT(trans_num) as "num"  FROM trans_goods  WHERE trans_num = 3 and status in (1,2) GROUP BY group_id ) e ON a.group_id = e.group_id
+		LEFT JOIN (SELECT group_id ,COUNT(trans_num) as "num"  FROM trans_goods  WHERE trans_num = 4 and status in (1,2) GROUP BY group_id ) f ON a.group_id = f.group_id
+		LEFT JOIN (SELECT group_id ,COUNT(trans_num) as "num"  FROM trans_goods  WHERE trans_num = 5 and status in (1,2) GROUP BY group_id ) g ON a.group_id = g.group_id
+		LEFT JOIN (SELECT group_id ,COUNT(trans_num) as "num"  FROM trans_goods  WHERE trans_num > 5 and status in (1,2) GROUP BY group_id ) h ON a.group_id = h.group_id
+		LEFT JOIN (SELECT group_id ,COUNT(id) as "num"  FROM trans_goods  WHERE  status = 4 GROUP BY group_id) i ON a.group_id = i.group_id
+		LEFT JOIN (SELECT group_id ,Avg(buy_money)as "money"  FROM trans_goods  WHERE  status in (1,2) GROUP BY group_id) j ON a.group_id = j.group_id
+</select>
+
+	<select id="findListLock" resultType="TransGoods">
+		SELECT
+		<include refid="transGoodsColumnNormal"/>
+		FROM trans_goods a
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="goodsNo != null and goodsNo != ''">
+				AND a.goods_no = #{goodsNo}
+			</if>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="trueName != null and trueName != ''">
+				AND u.true_name = #{trueName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="buyId != null and buyId != ''">
+				AND a.buy_id = #{buyId}
+			</if>
+			<if test="ischeck != null and ischeck != ''">
+				AND a.ischeck = #{ischeck}
+			</if>
+			<if test="goodsNo != null and goodsNo != ''">
+				AND a.goods_no = #{goodsNo}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<when test="orderBy !=null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+		<if test="topLimit != null and topLimit != '' ">
+			limit 0,#{topLimit}
+		</if>
+		for UPDATE
+	</select>
+
+	
+	<select id="findList" resultType="TransGoods">
+		SELECT
+
+			<include refid="transGoodsColumns"/>
+
+		FROM trans_goods a
+		<include refid="transGoodsJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="trueName != null and trueName != ''">
+				AND u.true_name = #{trueName}
+			</if>
+			<if test="userRemark != null and userRemark != ''">
+				AND u.remarks = #{userRemark}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="buyId != null and buyId != ''">
+				AND a.buy_id = #{buyId}
+			</if>
+			<if test="ischeck != null and ischeck != ''">
+				AND a.ischeck = #{ischeck}
+			</if>
+			<if test="goodsNo != null and goodsNo != ''">
+				AND a.goods_no = #{goodsNo}
+			</if>
+			<if test="parentListLike != null and parentListLike != ''">
+				AND u.parent_list like concat('%/',#{parentListLike},'/%')
+			</if>
+			<if test="baseGoodsStatus != null and baseGoodsStatus != ''">
+				AND tgg.status = #{baseGoodsStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<when test="orderBy !=null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+		<if test="topLimit != null and topLimit != '' ">
+			limit 0,#{topLimit}
+		</if>
+
+
+	</select>
+
+	<select id="findByGroup" resultType="TransGoods">
+		select g.*, IFNULL(a.num,0) 'possessNum' ,IFNULL(b.num,0) 'deputeNum' ,IFNULL(c.num,0) 'sellNum' ,IFNULL(d.num,0) 'takeGoodsNum' from
+		(select g1.group_id, g2.name  from trans_goods  g1, trans_goods_group g2  where g1.group_id = g2.id and   user_name = #{userName} group by group_id ORDER BY g2.id DESC) g
+		left join (SELECT group_id , count(group_id) as 'num'   from trans_goods where user_name = #{userName} and status = '2' group by  group_id) a on a.group_id = g.group_id
+		left join (SELECT group_id , count(group_id) as 'num'   from trans_goods where user_name = #{userName} and status = '1' group by  group_id) b on b.group_id = g.group_id
+		left join (SELECT group_id , count(group_id) as 'num'   from trans_goods where user_name = #{userName} and status = '0' group by  group_id) c on c.group_id = g.group_id
+		left join (SELECT group_id , count(group_id) as 'num'   from trans_goods where user_name = #{userName} and status = '4' group by  group_id) d on d.group_id = g.group_id
+	</select>
+
+	<!--<select id="getHoldGoodsNum" resultType="TransGoods">-->
+		<!--SELECT-->
+		<!--a.name AS name,-->
+		<!--COUNT(b.id) AS possessNum-->
+		<!--FROM-->
+		<!--trans_goods b-->
+		<!--LEFT JOIN trans_goods_group a ON a.id = b.group_id-->
+		<!--WHERE-->
+		<!--b.status = #{status}-->
+		<!--AND b.user_name = #{userName}-->
+		<!--AND b.group_id = #{groupId}-->
+	<!--</select>-->
+	<select id="getByBuyId" resultType="TransGoods">
+		SELECT
+		<include refid="transGoodsColumns"/>
+		FROM trans_goods a
+		WHERE a.buy_id = #{buyId}
+	</select>
+	<select id="findKunSunRanklist" resultType="TransGoodsKuiSun">
+		SELECT
+		a.user_name AS "userName",
+		SUM(a.buy_money) AS "buyMoney",
+		SUM(a.sell_money) AS "sellMoney",
+		SUM(a.sell_money - a.buy_money) AS "kuiSunMoney",
+		u.true_Name AS "trueName"
+		FROM trans_goods a
+		LEFT JOIN user_userinfo u ON u.user_name = a.user_name
+		<where>
+			AND a.status = "0"
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="beginSelltime != null and endSelltime != null and beginSelltime != '' and endSelltime != ''">
+				AND   a.sell_time BETWEEN #{beginSelltime} AND #{endSelltime}
+			</if>
+		</where>
+			GROUP BY a.user_name
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<when test="order == 0">
+				ORDER BY kuiSunMoney
+			</when>
+			<when test="order == 1">
+				ORDER BY kuiSunMoney DESC
+			</when>
+			<otherwise>
+				ORDER BY kuiSunMoney
+			</otherwise>
+		</choose>
+	</select>
+
+
+	
+	<insert id="insert">
+		INSERT INTO trans_goods(
+			group_id,
+			user_name,
+			status,
+			buy_money,
+			sell_money,
+			create_by,
+			create_date,
+			sell_time,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			buy_id,
+			ischeck,
+			goods_no,
+			trans_num,
+			num
+		) VALUES (
+			#{groupId},
+			#{userName},
+			#{status},
+			#{buyMoney},
+			#{sellMoney},
+			#{createBy.id},
+			#{createDate},
+			#{sellTime},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{buyId},
+			#{ischeck},
+			#{goodsNo},
+			#{transNum},
+			#{num}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE trans_goods SET 	
+			status = #{status},
+			sell_money = #{sellMoney},
+			remarks = #{remarks},
+			sell_time = #{sellTime},
+			buy_id = #{buyId},
+			ischeck = #{ischeck},
+			goods_no = #{goodsNo},
+			update_date = #{updateDate},
+			trans_num = #{transNum},
+			num = #{num}
+		WHERE id = #{id}
+	</update>
+	<update id="updateNum">
+		UPDATE trans_goods SET
+		num = num + #{num}
+		WHERE id = #{id}
+	</update>
+	<update id="delete">
+		delete from  trans_goods
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteExceed"  >
+		DELETE FROM trans_goods  where num = 0 AND group_id in
+		<foreach collection="groupIdArray" item = "groupId" open="(" separator="," close=")">
+			#{groupId}
+		</foreach>
+	</delete>
+
+	
+</mapper>

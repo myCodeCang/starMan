@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>绑定银行卡</title>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../static/qyScript/web/layer/css/layer-mobile.css"/>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn back" href="javascript :history.back(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>绑定银行卡</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div id="temp-bankCard">
+
+		</div>
+		<a href="add-card.html" style="color: white">
+			<div class="aui-content name-but">
+				<div class="aui-btn aui-btn-block">添加银行卡</div>
+			</div>
+		</a>
+	</body>
+
+	<script id="tpl-bankCard" type="text/html">
+		{{each userBankList.list}}
+		<div class="aui-content card aui-margin-t-10">
+			<h3><span class="aui-pull-left">{{$value.bankName}}</span><span class="aui-pull-right aui-padded-r-5" onclick="delateBank({{$value.id}})">删除</span></h3>
+			<div>
+				<p><span>开户行：</span><span>{{$value.bankUserAddress}}</span></p>
+				<p><span>姓　名：</span><span>{{$value.bankUserName}}</span></p>
+				<p><span>卡　号：</span><span>{{$value.bankUserNum}}</span></p>
+			</div>
+		</div>
+		{{/each}}
+
+	</script>
+	<script type="text/javascript">
+        if(window.name != "page1"){
+            location.reload();
+            window.name = "page1";
+        }
+        else{
+            window.name = "";
+        }
+
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+
+        //apicloud 准备完成
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            var qyWin  = layui.qyWin;
+
+            //qyWin.fixStatusBar("header");
+            loadData();
+        }
+
+        function loadData(){
+
+            layui.qyForm.qyajax("/f/app/userinfo/userBankList",{},function(data){
+
+
+                var html = template('tpl-bankCard', data);
+                $("#temp-bankCard").append(html);
+
+
+            });
+        }
+        function delateBank(id){
+            layui.layer.open({
+                content: '您确定要删除吗？'
+                ,btn: ['确认', '取消']
+                ,yes: function(index){
+                    layui.qyForm.qyajax("/f/app/userinfo/deleteUserBank",{id : id},function(data){
+                        layui.qyWin.toast(data.info);
+                        $("#temp-bankCard").html("");
+                        loadData();
+                    });
+                    layui.layer.close(index);
+                }
+
+            });
+        }
+
+	</script>
+</html>

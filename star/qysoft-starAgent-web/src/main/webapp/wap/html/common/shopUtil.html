@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../../css/aui/aui.css" />
+
+    <script type="text/javascript" src="../../script/layer/layui.js"></script>
+    <script type="text/javascript" src="../../script/qyconfig.js"></script>
+</head>
+<body>
+  
+</body>
+<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../script/");
+    
+        //apicloud 准备完成
+        apiready = function(){
+              layui.use(['qyWin','qyShop'], initpage);
+        };
+
+        function initpage(){
+           
+            var shopid = GetQueryString("shopid");
+
+            layui.qyShop.openShop(shopid);
+        }
+
+        function GetQueryString(name)
+        {
+             var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+             var r = window.location.search.substr(1).match(reg);
+             if(r!=null)return  unescape(r[2]); return null;
+        }
+
+       
+</script>
+
+</html>

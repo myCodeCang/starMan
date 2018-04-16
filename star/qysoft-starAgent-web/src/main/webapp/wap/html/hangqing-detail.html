@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title id="title"></title>
+	<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+	<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+</head>
+<body class="bg-gray">
+<!--<header class="aui-bar aui-bar-nav home">-->
+<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+<!--<span class="aui-iconfont aui-icon-left"></span>-->
+<!--</a>-->
+<!--<div class="aui-title">-->
+<!--<span>行情</span>-->
+<!--</div>-->
+<!--<a class="aui-pull-right aui-btn">-->
+<!--<span class="sangedian"></span>-->
+<!--</a>-->
+<!--</header>-->
+<!--<div class="height-one"></div>-->
+<div class="aui-content cuohe-data">
+	<div class="aui-grid">
+		<div class="aui-row">
+			<div class="aui-col-xs-4 cuohe-data-one">
+				<p>
+					<span class="text-red">￥<span id="nowPrice"></span></span>
+					<span id="subimg" style="display:inline-block;"></span>
+				</p>
+				<p>
+					<span  id="sub"></span>&nbsp;&nbsp;
+					<span  id="subpercent"></span>
+				</p>
+			</div>
+			<div class="aui-col-xs-4 cuohe-data-two">
+				<p><span>最　高:</span>&nbsp;<span class="text-red" id="hightest"></span></p>
+				<p><span>最　低:</span>&nbsp;<span class="text-green1st" id="lowest">0.20</span></p>
+			</div>
+			<div class="aui-col-xs-4 cuohe-data-three">
+				<p><span>今　开:</span>&nbsp;<span id="openPrice"></span></p>
+				<p><span>转　手:</span>&nbsp;<span id="changeHand"></span></p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="aui-content cuohe-data-one1st">
+	<p>
+		&nbsp;<span class="date-color">当前价</span>&nbsp;&nbsp;<span id="avgprice"></span>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span class="date-color">最新</span>&nbsp;&nbsp;<span id="hourPrice"></span>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span class="date-color">额</span>&nbsp;&nbsp;<span id="daycirculatesMoney"></span>
+	</p>
+	<p>
+		&nbsp;<span class="date-color">流通时间</span>&nbsp;&nbsp;<span id="circulatesTime"></span>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span class="date-color">量</span>&nbsp;&nbsp;<span id="daycirculatesTime"></span>
+	</p>
+</div>
+<div class="aui-content cuohe-tab">
+	<div class="aui-tab">
+		<div class="aui-tab-item aui-active" onclick="timeShare()" id="timeShare">价格走势</div>
+		<div class="aui-tab-item" onclick="kChart()" id="kChart">日K</div>
+	</div>
+</div>
+<div class="aui-content cuohe-fenshi" id="fenshi-detail">
+	<div class="aui-grid">
+		<div class="aui-row">
+			<div class="aui-col-xs-8 cuohe-fenshi-one" id="echarts" style="height:16.6rem;overflow: hidden;">
+				<div style="position: relative;">
+					<h3 style="display:none;height: 2rem;line-height: 2rem;padding-left: 0.5rem;position: absolute;top:0;left:0;z-index:55;" id="chartstop">
+						<span style="color:#9f9f9f;font-size:0.65rem;">当前价</span>&nbsp;<span style="color:#ffbb04;font-size:0.65rem;" id="nowmoney"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+						<span style="color:#9f9f9f;font-size:0.65rem;">现手</span>&nbsp;<span style="color: #ff7529;font-size:0.65rem;" id="nowhand"></span>
+					</h3>
+					<div id="fenshi">
+
+					</div>
+				</div>
+			</div>
+			<div class="aui-col-xs-4 cuohe-fenshi-two">
+				<div class="aui-tab cuohe-tab1st" id="tab">
+					<div class="aui-tab-item aui-active" onclick="fiveSpeed()" id="fiveSpeed">五档</div>
+					<div class="aui-tab-item" onclick="detail()" id="detail">明细</div>
+				</div>
+				<div class="aui-content wudang" id="wudang">
+					<div class="aui-grid wudang-one" id="temp-fiveSpeed">
+
+					</div>
+				</div>
+				<div class="aui-content mingxi" id="mingxi">
+					<div class="aui-grid" id="temp-marketDetail">
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="aui-content cuohe-zhu" id="rik-detail">
+	<div id="rik" style="height:16.6rem;"></div>
+</div>
+<div class="aui-content cuohe-guize">
+	<h3>交易规则</h3>
+	<div class="cuohe-guize-detail" id="transRules">
+
+	</div>
+</div>
+<div class="blank_15"></div>
+<div class="blank_15"></div>
+<div class="blank_15"></div>
+<footer class="aui-bar aui-bar-tab hangqin-footer" id="footer">
+	<div class="aui-bar-tab-item" tapmode>
+		<a href="index.html">
+			<i class="hangqin-cz"></i>
+			<div class="aui-bar-tab-label">首页</div>
+		</a>
+	</div>
+	<div class="aui-bar-tab-item" tapmode>
+		<a href="javascript:void(0);" id="toqiugou">
+			<i class="hangqin-qiugou"></i>
+			<div class="aui-bar-tab-label">求购</div>
+		</a>
+	</div>
+	<div class="aui-bar-tab-item aui-active" tapmode>
+		<a href="javascript:void(0);" id="tozhuanrang">
+			<i class="hangqin-zhuanrang-one"></i>
+			<div class="aui-bar-tab-label">转让</div>
+		</a>
+	</div>
+	<div class="aui-bar-tab-item" tapmode>
+		<a href="javascript:void(0);" id="duihuan">
+			<i class="hangqin-duihuan"></i>
+			<div class="aui-bar-tab-label">兑换</div>
+		</a>
+	</div>
+	<div class="aui-bar-tab-item" tapmode>
+		<a onclick="colect()">
+			<i class="tianjiazixuan"></i>
+			<div class="aui-bar-tab-label">添加自选</div>
+		</a>
+	</div>
+	<!--<div class="aui-bar-tab-item" tapmode>-->
+		<!--<a href="chongzhi.html">-->
+			<!--<i class="hangqin-cz"></i>-->
+			<!--<div class="aui-bar-tab-label">充值</div>-->
+		<!--</a>-->
+	<!--</div>-->
+</footer>
+</body>
+<script src="../css/echarts/echarts.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/html" id="tpl-fiveSpeed">
+	{{each eachList}}
+	<div class="aui-row">
+		<div class="aui-col-xs-4" style="width:25%;">
+			<span>卖{{5-$index}}</span>
+		</div>
+		<div class="aui-col-xs-4" style="width:37.5%;">
+			<span class="text-red">--</span>
+		</div>
+		<div class="aui-col-xs-4" style="width:37.5%;">
+			<span class="text-green1st">--</span>
+		</div>
+	</div>
+	{{/each}}
+	{{each sellTransList}}
+	<div class="aui-row">
+		<div class="aui-col-xs-4" style="width:25%;">
+			<span>卖{{5 - length -$index}}</span>
+		</div>
+		<div class="aui-col-xs-4" style="width:37.5%;">
+			<span class="text-red">{{$value.price}}</span>
+		</div>
+		<div class="aui-col-xs-4" style="width:37.5%;">
+			<span class="text-green1st">{{$value.nowNum}}</span>
+		</div>
+	</div>
+	{{/each}}
+	<div style="width:100%;height: 1px;background:#ddd;"></div>
+	{{each buyTransList}}
+	<div class="aui-row">
+		<div class="aui-col-xs-4" style="width:25%;">
+			<span>买{{$index+1}}</span>
+		</div>
+		<div class="aui-col-xs-4" style="width:37.5%;">
+			<span class="text-green1st">{{$value.price}}</span>
+		</div>
+		<div class="aui-col-xs-4" style="width:37.5%;">
+			<span class="text-red">{{$value.nowNum}}</span>
+		</div>
+	</div>
+	{{/each}}
+</script>
+<script type="text/html" id="tpl-marketDetail">
+	{{each logList}}
+	<div class="aui-row">
+		<div class="aui-col-xs-4">
+			<span>{{$value.createDate | timeFormat}}</span>
+		</div>
+		<div class="aui-col-xs-4">
+			<span class="text-red">{{$value.price}}</span>
+		</div>
+		<div class="aui-col-xs-4">
+			<span class="text-red">{{$value.amount}}</span>
+		</div>
+	</div>
+	{{/each}}
+</script>
+<script type="text/javascript">
+    qySoftInit("../../static/qyScript/web/");
+    var lowPrice =0;
+    var limitLow =0;
+    var limitHight =0;
+    var hightPrice =0;
+    var openPrice = 0;
+    var nowPrice = 0;
+    var dealNum = 0;
+    var groupId;
+    var flag=false;
+    var Kflag = false;
+    var speedFlag = false;
+    var dealFlag = false;
+    var myChart;
+    var kMyChart;
+    var data0;
+    var line_data = [];
+    var beginTime;
+    var beginTime2;
+    var beginTime3;
+    var endTime;
+    var endTime2;
+    var endTime3;
+    var long;
+    var long2;
+    var long3;
+    //apicloud 准备完成
+    layui.use(['qyWin','qyForm','template'], initpage);
+    function initpage(){
+        groupId = layui.qyForm.GetQueryString("id");
+        getDetailInfo();
+        jiazai();
+        fiveSpeed();
+    }
+    function jiazai() {
+        window.setInterval(function() {
+            realTimePrice();
+            if(Kflag) {refreshKline();}
+            if (speedFlag){fiveSpeed();}
+            if (dealFlag){detail();}
+            if(flag){getNewestLineData();}
+        }, 1000);
+    }
+
+    function realTimePrice(){
+        layui.qyForm.qyajax("/f/app/married/getNowPrice",{groupId:groupId},function(data){
+            var obj = JSON.parse(data.json);
+            nowPrice = obj.price;
+            var sub=0;
+            if(openPrice){
+                sub = nowPrice-openPrice;
+            }
+            $("#sub").html(sub.toFixed(2));
+            $("#avgprice").html(nowPrice+"元/秒");
+            $("#nowPrice").html(nowPrice);
+            $("#nowmoney").html(nowPrice);
+            $("#hourPrice").html((nowPrice*3600).toFixed(2)+"元/时");
+            $("#daycirculatesMoney").html((dealNum/2*nowPrice).toFixed(2)+"元");
+            $("#daycirculatesTime").html(dealNum/2+"秒");
+            if(sub<0){
+                $("#subimg").html('<img src="../image/down.png" />');
+                $("#sub").addClass("text-green1st");
+                $("#subpercent").addClass("text-green1st");
+            }else if(sub>0){
+                $("#subimg").html('<img src="../image/top.png" />');
+                $("#sub").addClass("text-red");
+                $("#subpercent").addClass("text-red");
+            }else{
+                $("#subimg").html("");
+                $("#subpercent").removeClass("text-red");
+                $("#subpercent").removeClass("text-green1st");
+            }
+            var subpercent=0;
+            if(openPrice){
+                subpercent = (sub/openPrice*100).toFixed(2)
+            }
+            $("#subpercent").html(subpercent+"%");
+        });
+    }
+    //获取页面头部信息
+    function getDetailInfo(){
+        realTimePrice();
+        layui.qyForm.qyajax("/f/app/married/getGoodsInfoByGroupId",{groupId:groupId},function(data){
+            var obj = data.baseGoodsInfo[0].mdTradeMain;
+            openPrice = obj.openingPrice;
+            hightPrice = obj.highestPrice;
+            lowPrice = obj.lowestPrice;
+            dealNum = data.baseGoodsInfo[0].sum;
+            limitHight = data.hightest;
+            limitLow = data.lowest;
+            beginTime = data.beginTime;
+            long = Math.ceil(data.seconds/3600000);
+            beginTime2 = data.beginTime2;
+            long2 = Math.ceil(data.seconds2/3600000);
+            beginTime3 = data.beginTime3;
+            long3 = Math.ceil(data.seconds3/3600000);
+            endTime = data.endTime;
+            endTime2 = data.endTime2;
+            endTime3 = data.endTime3;
+            $("#title").html(data.baseGoodsInfo[0].name);
+            $("#hightest").html(hightPrice);
+            $("#lowest").html(lowPrice);
+            $("#openPrice").html(openPrice);
+            $("#changeHand").html((((dealNum/2/data.baseGoodsInfo[0].num))*100).toFixed(2)+"%");
+            $("#nowhand").html(dealNum/2);
+            $("#circulatesTime").html(data.baseGoodsInfo[0].num+"秒");
+            $("#transRules").html(data.baseGoodsInfo[0].transRules);
+            $("#toqiugou").attr("href","qiugou.html?id="+groupId);
+            $("#tozhuanrang").attr("href","zhuanrang.html?id="+groupId);
+            $("#duihuan").attr("href","chanpin.html?groupId="+groupId);
+            timeShare();
+        });
+    }
+
+    //切换五档
+    function fiveSpeed(){
+        speedFlag = true;
+        dealFlag = false;
+        $("#fiveSpeed").addClass("aui-active").siblings().removeClass("aui-active");
+        $("#mingxi").hide();
+        $("#wudang").show();
+        layui.qyForm.qyajax("/f/app/married/mdTradeList",{groupId:groupId},function(data){
+
+            var array ={
+                "price":"--",
+                "nowNum":"--"
+            };
+            var data = JSON.parse(data.fiveSpeedInfo);
+            data['eachList'] = [];
+            data["length"] = 5-data.sellTransList.length;
+            for (var i=0;i<5-data.sellTransList.length;i++){
+                data['eachList'][i] = array;
+            }
+            data.sellTransList  = data.sellTransList.reverse();
+            for (var i=data.buyTransList.length;i<5;i++){
+                data.buyTransList[i] = array;
+            }
+            var html = template('tpl-fiveSpeed', data);
+            $("#temp-fiveSpeed").html(html);
+        });
+    }
+    //切换明细
+    function detail(){
+        speedFlag = false;
+        dealFlag = true;
+        $("#detail").addClass("aui-active").siblings().removeClass("aui-active");
+        $("#wudang").hide();
+        $("#mingxi").show();
+        layui.qyForm.qyajax("/f/app/married/marketDetail",{groupId:groupId},function(data){
+            var array ={
+                "createDate":"-------------",
+                "price":"--",
+                "amount":"--"
+            };
+            var data = JSON.parse(data.logList);
+            for (var i=data.logList.length;i<10;i++){
+                data.logList[i] = array;
+            }
+            var html = template('tpl-marketDetail', data);
+            $("#temp-marketDetail").html(html);
+        });
+    }
+
+    //切换分时
+    function timeShare(){
+        flag = true;
+        Kflag = false;
+        $("#timeShare").addClass("aui-active").siblings().removeClass("aui-active");
+        $("#rik-detail").hide();
+        $("#fenshi-detail").show();
+        $("#chartstop").show();
+        var fenshiContainer = document.getElementById('fenshi');
+        //用于使chart自适应高度和宽度,通过窗体高宽计算容器高宽
+        var resizeWorldMapContainer = function () {
+            fenshiContainer.style.width = document.getElementById('echarts').style.width;
+            fenshiContainer.style.height = document.getElementById('echarts').style.height;
+            fenshiContainer.style.zIndex=30;
+        };
+        //设置容器高宽
+        resizeWorldMapContainer();
+        line_data = [];
+        myChart = echarts.init(document.getElementById('fenshi'));
+        var dtCurDate = new Date();
+        var arrCurTime = [];
+        var dtTimeAM = new Date(dtCurDate.getFullYear(), dtCurDate.getMonth(), dtCurDate.getDate(), beginTime.substring(0,2), beginTime.substring(3,5), '0', '0');
+        for (var i=0; i<=long*60; i++) {
+            arrCurTime.push([addZero(dtTimeAM.getHours()), addZero(dtTimeAM.getMinutes())].join(":"));
+            if(dtTimeAM.getHours()==endTime.substring(0,2) &&dtTimeAM.getMinutes()==endTime.substring(3,5)){
+                arrCurTime.push(addZero(endTime.substring(0,5))+"/"+addZero(beginTime2.substring(0,5)));
+            }
+            dtTimeAM = new Date(dtTimeAM.getTime() + 60*1000);
+        }
+        var dtTimePM = new Date(dtCurDate.getFullYear(), dtCurDate.getMonth(), dtCurDate.getDate(), beginTime2.substring(0,2), beginTime2.substring(3,5), 0, 0);
+        for (var i=0; i<=long2*60; i++) {
+            arrCurTime.push([addZero(dtTimePM.getHours()), addZero(dtTimePM.getMinutes())].join(":"));
+            if(dtTimePM.getHours()==endTime2.substring(0,2) && dtTimePM.getMinutes()==endTime2.substring(3,5)){
+                arrCurTime.push(addZero(endTime2.substring(0,5))+"/"+addZero(beginTime3.substring(0,5)));
+            }
+            dtTimePM = new Date(dtTimePM.getTime() + 60*1000);
+        }
+        var dtTimeDN = new Date(dtCurDate.getFullYear(), dtCurDate.getMonth(), dtCurDate.getDate(), beginTime3.substring(0,2), beginTime3.substring(3,5), 0, 0);
+        for (var i=0; i<=long3*60; i++) {
+            arrCurTime.push([addZero(dtTimeDN.getHours()), addZero(dtTimeDN.getMinutes())].join(":"));
+            dtTimeDN = new Date(dtTimeDN.getTime() + 60*1000);
+        }
+        for (var i=0; i<arrCurTime.length; i++) {
+            line_data.push( {name: arrCurTime[i], value: "-"} );
+        }
+//        var min = ((limitLow-openPrice)/openPrice).toFixed(2);
+//        var max = ((limitHight-openPrice)/openPrice).toFixed(2);
+        var min = limitLow;
+        var max = limitHight;
+        var option = {
+            title : {
+            },
+            tooltip : {
+                trigger : 'axis',
+                axisPointer : {
+                    type : 'line'
+                },
+                position : 'top',
+                formatter: function (params, ticket, callback) {
+                    //alert(params[0].data.value);
+                    //params[0].data.value =  params[0].data.value + openPrice*1
+					var value ='--';
+					if(params[0].data.value!="-"){
+                        value = (params[0].data.value - (-openPrice)).toFixed(2);
+					}
+                    return params[0].data.name+ '<br/>'+'价格：'+value;
+                }
+            },
+            grid:{
+                show:true,
+                left:5,
+                top:'35px',
+                bottom:'8%',
+                right:0
+            },
+            xAxis : {
+                boundaryGap : false,
+                type : 'category',
+                show: true,
+                splitLine : {
+                    show : true,
+                    interval : function (index, value) {
+                        if (value == addZero(endTime.substring(0,5))+"/"+addZero(beginTime2.substring(0,5))
+                            || value == addZero(endTime2.substring(0,5))+"/"+(beginTime3.substring(0,5))
+                        ) {
+                            return true;
+                        }
+                        else return false;
+                    },
+                    show: true,
+                    lineStyle: {
+                        // 使用深浅的间隔色
+                        color: ['#aaa'],
+                        type: "dashed"
+                    },
+                },
+                data: arrCurTime,
+                scale: true,
+                axisTick : {
+                    show : true,
+                    interval : function (index, value) {
+                        if (value == addZero(endTime.substring(0,5))+"/"+addZero(beginTime2.substring(0,5))
+                            || value == addZero(endTime2.substring(0,5))+"/"+addZero(beginTime3.substring(0,5))
+                        ) {
+                            return true;
+                        }
+                        else return false;
+                    }
+                },
+                axisLabel : {
+                    show : true,
+                    interval : 0,
+                    formatter: function (value, index) {
+                        if (value == addZero(endTime.substring(0,5))+"/"+addZero(beginTime2.substring(0,5))
+                            || value == addZero(endTime2.substring(0,5))+"/"+addZero(beginTime3.substring(0,5))) {
+                            return value;
+                        } else {
+                            return "";
+                        }
+                    }
+                },
+            },
+            yAxis:[
+                {
+                    maxInterval :(limitHight - openPrice)/3,
+                    minInterval :(limitHight - openPrice)/3,
+                    type: 'value',
+                    name: '',
+                    position: 'left',
+                    axisLabel:{
+                        inside:true,
+                        formatter: function (value , index) {
+                            return (value +openPrice ).toFixed(2);
+                        }
+                    },
+                    splitLine: {
+                        "show": true,
+                        lineStyle: {
+                            // 使用深浅的间隔色
+                            color: ['#aaa'],
+                            type:"dashed"
+                        }
+                    },
+                    min:limitLow - openPrice,
+                    max:limitHight - openPrice,
+                },
+                {
+                    maxInterval :(limitHight - openPrice)/3,
+                    minInterval :(limitHight - openPrice)/3,
+                    min:limitLow - openPrice,
+                    max:limitHight - openPrice,
+                    type: 'value',
+                    position: 'right',
+                    axisLabel:{
+                        inside:true,
+                        formatter:function (value,index) {
+                            return  (((value/openPrice)*100).toFixed(2)) + "%";
+                        }
+                    },
+                    splitLine: {
+                        "show": true,
+                        lineStyle: {
+                            // 使用深浅的间隔色
+                            color: ['#aaa'],
+                            type:"dashed"
+                        }
+                    }
+                },
+            ],
+            series: [{
+                data:[],
+                name: '涨幅%',
+                type: 'line',
+                smooth:true,
+                symbol: 'none',
+                lineStyle: {
+                    normal: {
+                        color: '#6581c4',
+                        width:1
+                    }
+                },
+            }
+            ],
+        }
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        getLineData();
+        //用于使chart自适应高度和宽度
+        window.onresize = function () {
+            //重置容器高宽
+            resizeWorldMapContainer();
+            myChart.resize();
+        };
+
+    }
+    function getLineData(){
+        layui.qyForm.qyajax("/f/app/married/getEchartsRealTimeData",{groupId:groupId},function(res){
+            for(var i=0;i<res.timeShareData.length;i++){
+                var time_pos = res.timeShareData[i].createDate.substring(11,16);
+                var pos = getDataPos(time_pos);
+                line_data.splice(pos, 1, {name: time_pos, value: (res.timeShareData[i].price - openPrice).toFixed(2)});
+            }
+            myChart.setOption({
+                series: [{
+                    data : line_data,
+                }]
+            });
+        });
+    }
+    function getNewestLineData(){
+        layui.qyForm.qyajax("/f/app/married/getNowPrice",{groupId:groupId},function(data){
+            var obj = JSON.parse(data.json);
+            var time_pos = obj.nowTime.substring(0,5);
+            var pos = getDataPos(time_pos);
+            line_data.splice(pos, 1, {name: time_pos, value: obj.price-openPrice});
+            myChart.setOption({
+                series: [{
+                    data : line_data
+                }]
+            });
+        });
+    }
+    function getDataPos(time) {
+        for (var i=0; i<line_data.length; i++) {
+            if (time == line_data[i].name) return i;
+        }
+    }
+    //时间不足两位自动补齐
+    function addZero(val, len, top) {
+        if (!arguments[1]){
+            len = 2;
+        }
+        if (!arguments[2]){
+            top = true;
+        }
+        if (val.toString().length < len) {
+            while (len != val.toString().length) {
+                if (top) val = "0" + val.toString();
+                else val = val.toString() + "0";
+            }
+        }
+        return val.toString();
+    }
+    //切换柱形图
+    function kChart(){
+        flag = false;
+        Kflag = true;
+        $("#kChart").addClass("aui-active").siblings().removeClass("aui-active");
+        $("#fenshi-detail").hide();
+        $("#rik-detail").show();
+        $("#chartstop").hide();
+//            alert(JSON.stringify(data));
+        var rikContainer = document.getElementById('rik');
+        //用于使chart自适应高度和宽度,通过窗体高宽计算容器高宽
+        var resizeWorldMapContainer = function () {
+            rikContainer.style.width = document.getElementById('rik').style.width;
+            rikContainer.style.height = document.getElementById('rik').style.height;
+        };
+        //设置容器高宽
+        resizeWorldMapContainer();
+        kMyChart = echarts.init(document.getElementById('rik'));
+        var upColor = '#ec0000';
+        var upBorderColor = '#8A0000';
+        var downColor = '#00da3c';
+        var downBorderColor = '#008F28';
+
+        var kOption = {
+            title: {
+                text: '日K线',
+                left: 0
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                },
+                formatter: function (params) {
+                    var res = params[0].seriesName + ' ' + params[0].name;
+                    res += '<br/>  开盘 : ' + params[0].value[1] +'</br>'+ '  收盘 : ' + params[0].value[2];
+                    res += '<br/>  最低 : ' + params[0].value[3] +'</br>'+'  最高 : ' + params[0].value[4];
+                    return res;
+                }
+
+            },
+            legend: {
+                data: ['日K']
+            },
+            grid: {
+                left: '10%',
+                right: '10%',
+                bottom: '15%'
+            },
+            xAxis: {
+                type: 'category',
+                //data: data0.categoryData,
+                scale: true,
+                boundaryGap : false,
+                axisLine: {onZero: false},
+                splitLine: {show: false},
+                splitNumber: 20,
+                min: 'dataMin',
+                max: 'dataMax',
+            },
+            yAxis: {
+                scale: true,
+                splitArea: {
+                    show: true
+                }
+            },
+            dataZoom: [
+                {
+                    type: 'inside',
+                    start: 50,
+                    end: 100
+                },
+                {
+                    show: true,
+                    type: 'slider',
+                    y: '90%',
+                    start: 50,
+                    end: 100
+                }
+            ],
+            series: [
+                {
+                    name: '日K',
+                    type: 'candlestick',
+//                            data: data0.values,
+                    barWidth:10,
+                    itemStyle: {
+                        normal: {
+                            color: upColor,
+                            color0: downColor,
+                            borderColor: upBorderColor,
+                            borderColor0: downBorderColor
+                        }
+                    },
+                    markPoint: {
+                        label: {
+                            normal: {
+                                formatter: function (param) {
+                                    return param != null ? Math.round(param.value) : '';
+                                }
+                            }
+                        },
+                        tooltip: {
+                            formatter: function (param) {
+                                return param.name + '<br>' + (param.data.coord || '');
+                            }
+                        }
+                    }
+                }
+            ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        kMyChart.setOption(kOption);
+        refreshKline();
+        //用于使chart自适应高度和宽度
+        window.onresize = function () {
+            //重置容器高宽
+            resizeWorldMapContainer();
+            kMyChart.resize();
+        };
+
+    }
+
+    function refreshKline(){
+        layui.qyForm.qyajax("/f/app/married/getKlineData",{groupId:groupId},function(data){
+            data0 = splitData(data.map);
+            var option2 = {
+                xAxis: {
+                    data: data0.categoryData
+                },
+                series: [
+                    {
+                        data: data0.values
+                    }
+                ]
+            };
+            kMyChart.setOption(option2);
+        });
+    }
+
+    function splitData(rawData) {
+        var categoryData = [];
+        var values = []
+        for (var i = 0; i < rawData.length; i++) {
+            categoryData.push(rawData[i].splice(0, 1)[0]);
+            values.push(rawData[i]);
+        }
+        return {
+            categoryData: categoryData,
+            values: values
+        };
+    }
+
+    //添加自选
+    function colect(){
+        layui.qyForm.qyajax("/f/app/married/colectStar",{'groupId':groupId},function(data){
+            layui.qyWin.toast("恭喜您收藏成功!");
+        });
+    }
+
+</script>
+</html>

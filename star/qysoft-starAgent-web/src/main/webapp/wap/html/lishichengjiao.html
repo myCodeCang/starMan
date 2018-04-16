@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>历史成交</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>历史成交</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<!--<div class="aui-content lishichengjiao">-->
+			<!--<div class="aui-grid">-->
+				<!--<div class="aui-row">-->
+					<!--<div class="aui-col-xs-6">-->
+						<!--<div>-->
+							<!--<span>起始日期:</span>-->
+							<!--<input type="date" id="beginTime" onchange="initpage()"/>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="aui-col-xs-6">-->
+						<!--<div>-->
+							<!--<span>结束日期:</span>-->
+							<!--<input type="date" id="endTime" onchange="initpage()"/>-->
+						<!--</div>-->
+
+					<!--</div>-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+			<div id="temp-historyTransList">
+
+			</div>
+			<div class="aui-content dangri-img" id="noLog" style="display: none;">
+
+			</div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+	</body>
+	<script type="text/html" id="tpl-historyTransList">
+		{{if historyTransList.count == 0}}
+		<img src="../image/nochengjiao.png" style="display: block;margin:0 auto;margin-top:90px;width:45%;">
+		{{/if}}
+		{{each historyTransList.list}}
+		<div class="aui-content daylog">
+			<h3>{{$value.name}}({{$value.groupId}})</h3>
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-6">
+						<span>成交价:<span>{{$value.price}}</span></span>
+						<span>成交量:<span>{{$value.amount}}</span></span>
+					</div>
+					<div class="aui-col-xs-6">
+						<span>{{$value.createDate}}</span>
+						<span class="aui-text-danger">￥{{$value.price * $value.amount,2 | numberFormat}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{/each}}
+	</script>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        layui.use(['qyWin','qyForm','template'], initpage);
+        function initpage(){
+            var beginTime = $("#beginTime").val();
+            var endTime = $("#endTime").val();
+            $("#temp-historyTransList").html("");
+            layui.qyForm.pageajax(getHistoryLog, {
+                "pageNo": "0",
+                "pageSize": "10",
+                'beginTime':beginTime,
+                'endTime':endTime
+            }, 'temp-historyTransList');
+        }
+        function getHistoryLog(param,callback){
+            layui.qyForm.qyajax("/f/app/married/getHistoryTransLog",param,function(data){
+                var pageData = data.historyTransList;
+                var html = template('tpl-historyTransList', data);
+                $("#temp-historyTransList").append(html);
+                if (callback) {
+                    callback(pageData);
+                }
+            });
+        }
+	</script>
+</html>

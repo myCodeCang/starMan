@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>转让记录</title>
+		<link rel="stylesheet" type="text/css" href="../../static/qyScript/web/layer/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	</head>
+	<body>
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn back" href="javascript :history.back(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>转让记录</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div id="temp-zhuanrang">
+
+		</div>
+		<div class="blank_20"></div>
+		<div class="blank_20"></div>
+	</body>
+	<script id="tpl-zhuanrang" type="text/html">
+		{{if pages.count == 0}}
+		<img src="../image/wu.png" style="display: block;margin:0 auto;margin-top:90px;width:45%;">
+		{{/if}}
+		{{each pages.list}}
+		{{if $value.type != 3}}
+		<div class="aui-content meat">
+			<h3><span class="aui-pull-left">{{$value.goodsName}}({{$value.groupId}})</span><span class="aui-pull-right">{{$value.type==1?"出售成功":"买入成功"}}</span></h3>
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-6">
+						<span>交易数量：{{$value.num}}</span>
+						<span>交易对方：{{$value.transUserName}}</span>
+					</div>
+					<div class="aui-col-xs-6">
+						<span>交易单价：{{$value.money<0?-$value.money:$value.money}}</span>
+						<span>{{$value.createDate}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{/if}}
+		{{/each}}
+</script>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+
+        //apicloud 准备完成
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            var qyWin  = layui.qyWin;
+            var qyForm = layui.qyForm;
+
+            layui.qyForm.pageajax(loadData,{
+                "pageNo":"0",
+                "pageSize":"10"
+            },"temp-zhuanrang");
+        }
+        function loadData(param,callback){
+            layui.qyForm.qyajax("/f/star/attorn/getAttornLog",param,function(data){
+                var pageData = data.pages;
+                var html = template("tpl-zhuanrang",data);
+                $("#temp-zhuanrang").append(html);
+
+                //分页回调结束处理方法, 传入的参数必须正确
+                if(callback){
+                    callback(pageData);
+                }
+            })
+
+
+        }
+
+
+
+	</script>
+</html>

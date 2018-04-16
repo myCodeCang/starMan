@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.trans.dao.TransApplyDao">
+
+	<sql id="transApplyColumnsNormal">
+		a.id AS "id",
+		a.title AS "title",
+		a.group_id AS "groupId",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.all_num AS "allNum",
+		a.now_num AS "nowNum",
+		a.money AS "money",
+		a.status AS "status",
+		a.type AS "type",
+		a.maxnum AS maxnum,
+		a.message AS "message",
+		a.if_kuisun_status AS "ifKuisunStatus",
+		a.if_kuisun_money AS "ifKuisunMoney",
+		a.if_kuisun_begin AS "ifKuisunBegin",
+		a.if_kuisun_end AS "ifKuisunEnd",
+		a.if_hold_group_status AS "ifHoldGroupStatus",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+    
+	<sql id="transApplyColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.group_id AS "groupId",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.all_num AS "allNum",
+		a.now_num AS "nowNum",
+		a.money AS "money",
+		a.status AS "status",
+		a.type AS "type",
+		a.maxnum AS maxnum,
+		a.message AS "message",
+		a.if_kuisun_status AS "ifKuisunStatus",
+		a.if_kuisun_money AS "ifKuisunMoney",
+		a.if_kuisun_begin AS "ifKuisunBegin",
+		a.if_kuisun_end AS "ifKuisunEnd",
+		a.if_hold_group_status AS "ifHoldGroupStatus",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		t.name AS "transGoodsGroup.name"
+	</sql>
+	<sql id="transApplyJoins">
+		LEFT JOIN trans_goods_group t ON t.id = a.group_id
+	</sql>
+
+	<select id="getLock" resultType="TransApply">
+		SELECT
+		<include refid="transApplyColumnsNormal"/>
+		FROM trans_apply a
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+		</where>
+		for update
+	</select>
+    
+	<select id="get" resultType="TransApply">
+		SELECT 
+			<include refid="transApplyColumns"/>
+		FROM trans_apply a
+		<include refid="transApplyJoins"/>
+		WHERE a.id = #{id}
+		for update
+	</select>
+	
+	<select id="findList" resultType="TransApply">
+		SELECT 
+
+			<include refid="transApplyColumns"/>
+		FROM trans_apply a
+		<include refid="transApplyJoins"/>
+		<where>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<when test="orderBy !=null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+		<if test="topLimit != null and topLimit != '' ">
+			limit 0,#{topLimit}
+		</if>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO trans_apply(
+			id,
+			title,
+			group_id,
+			start_time,
+			end_time,
+			all_num,
+			now_num,
+			money,
+			status,
+			if_kuisun_status ,
+			if_kuisun_money ,
+			if_kuisun_begin ,
+			if_kuisun_end ,
+			if_hold_group_status ,
+			maxnum,
+			type,
+			message,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+
+		) VALUES (
+			#{id},
+			#{title},
+			#{groupId},
+			#{startTime},
+			#{endTime},
+			#{allNum},
+			#{nowNum},
+			#{money},
+			#{status},
+			#{ifKuisunStatus},
+			#{ifKuisunMoney},
+			#{ifKuisunBegin},
+			#{ifKuisunEnd},
+			#{ifHoldGroupStatus},
+			#{maxnum},
+			#{type},
+			#{message},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE trans_apply SET 	
+			title = #{title},
+			group_id = #{groupId},
+			start_time = #{startTime},
+			end_time = #{endTime},
+			all_num = #{allNum},
+			now_num = #{nowNum},
+			status = #{status},
+			type = #{type},
+			message = #{message},
+			money = #{money},
+			maxnum = #{maxnum},
+			if_kuisun_status = #{ifKuisunStatus},
+			if_kuisun_money = #{ifKuisunMoney},
+			if_kuisun_begin = #{ifKuisunBegin},
+			if_kuisun_end = #{ifKuisunEnd},
+			if_hold_group_status = #{ifHoldGroupStatus},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateTransApplyNowNum">
+		update trans_apply set now_num = now_num - #{num} where id = #{id}
+	</update>
+	
+	<update id="delete">
+		delete from  trans_apply
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

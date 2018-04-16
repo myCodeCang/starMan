@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>持仓商城</title>
+		<link rel="stylesheet" type="text/css" href="../../static/qyScript/web/layer/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn back" href="javascript :history.back(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>交易系统</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn" onclick="jifenjilu()">-->
+		        <!--<span class="ico-duihuan"></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content jiaoyi aui-margin-b-15">
+            <ul class="aui-list aui-media-list">
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" id="img">
+                            <!--<img src="../image/geren-touxiang.png" class="aui-img-round aui-list-img-sm">-->
+                        </div>
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text aui-margin-b-15">
+                                <div class="aui-list-item-title" id="userName"></div>
+                                <!--<div class="aui-list-item-right">收盘价：<span>0.00</span></div>-->
+                            </div>
+                            <div class="aui-list-item-text">
+                                <div class="aui-list-item-title">持有时间:<span id="haveTime"></span>秒</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>   
+		</div>
+		<div class="aui-content jiaoyi-duihuan">
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-6">
+						<div class="aui-btn" onclick="duihuan(1)">产品兑换</div>
+					</div>
+					<div class="aui-col-xs-6">
+						<div class="aui-btn" onclick="duihuan(0)">积分兑换</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-content home-h3 aui-margin-t-0">
+			<h3>一口价转让<a onclick="jifenjilu()" style="position: absolute;right: 0.5rem;top:0.25rem;color:#04b8f1;font-size:0.65rem;">转让记录</a></h3>
+		</div>
+		<div class="aui-content zhuan">
+			<div class="aui-content-padded">
+				<!--<img src="../image/maihuao.png" class="img-one"/>-->
+				<div class="aui-grid" id="temp-transBuyList">
+
+
+				</div>
+			</div>
+		</div>
+		<div class="aui-content zhuan aui-margin-t-10">
+			<div class="aui-content-padded">
+				<!--<img src="../image/maihuao.png" class="img-one"/>-->
+				<div class="aui-grid" id="temp-transSellList">
+
+				</div>
+			</div>
+		</div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+		<div class="aui-content mmhua">
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-6" style="border-right:1px solid #fff;" >
+						<div><img src="../image/buy.png"/></div>
+						<p onclick="jiaoyi(1)">发布买</p>
+					</div>
+					<div class="aui-col-xs-6">
+						<div><img src="../image/sell.png"/></div>
+						<p onclick="jiaoyi(0)">发布卖</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<script id="tpl-transBuyList" type="text/html">
+		{{if buyTransList == 0}}
+		<img src="../image/wujiaoyijilu.png" class="img-one"/>
+		{{else}}
+		<div class="aui-row">
+			<div class="aui-col-xs-3"></div>
+			<div class="aui-col-xs-3">价格(元/秒)</div>
+			<div class="aui-col-xs-3">时间(秒)</div>
+			<div class="aui-col-xs-3">操作</div>
+		</div>
+
+		{{each buyTransList}}
+		<div class="aui-row">
+			<div class="aui-col-xs-3">
+				<div class="aui-btn">卖</div>
+			</div>
+			<div class="aui-col-xs-3">{{$value.money}}</div>
+			<div class="aui-col-xs-3">{{$value.nowNum}}</div>
+			<div class="aui-col-xs-3">
+				<div class="aui-btn" onclick="buy({{$value.money}},{{$value.nowNum}})">买</div>
+			</div>
+		</div>
+		{{/each}}
+
+		{{/if}}
+
+	</script>
+	<script id="tpl-transSellList" type="text/html">
+		{{if sellTransList == 0}}
+		<img src="../image/wujiaoyijilu.png" class="img-two"/>
+		{{else}}
+		<div class="aui-row">
+			<div class="aui-col-xs-3"></div>
+			<div class="aui-col-xs-3">价格(元/秒)</div>
+			<div class="aui-col-xs-3">时间(秒)</div>
+			<div class="aui-col-xs-3">操作</div>
+		</div>
+		{{each sellTransList}}
+		<div class="aui-row">
+			<div class="aui-col-xs-3">
+				<div class="aui-btn">买</div>
+			</div>
+			<div class="aui-col-xs-3">{{$value.money}}</div>
+			<div class="aui-col-xs-3">{{$value.nowNum}}</div>
+			<div class="aui-col-xs-3">
+				<div class="aui-btn" onclick="sell({{$value.money}},{{$value.nowNum}})">卖</div>
+			</div>
+		</div>
+		{{/each}}
+		{{/if}}
+
+	</script>
+
+	<script type="text/javascript">
+
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+		var userinfo;
+        var groupId;
+        var goodsId;
+        var haveTime;
+        var saveFlag=false;
+        //apicloud 准备完成
+            layui.use(['qyWin', 'qyForm', 'template', 'layer'], initpage);
+
+
+        //初始化页面
+        function initpage() {
+            groupId = layui.qyForm.GetQueryString("groupId");
+            initData();
+		}
+        //初始化数据
+        function initData() {
+            var qyWin = layui.qyWin;
+            var qyForm = layui.qyForm;
+            layui.qyForm.qyajax("/f/star/attorn/getStarNum",{groupId:groupId},function(data){
+                goodsId = data.transGoods.id;
+			})
+            //加载个人信息
+            layui.qyForm.qyajax("/f/app/userinfo/userinfo", {}, function (data) {
+                userinfo = data.user;
+            })
+            //获得秒数
+            layui.qyForm.qyajax("/f/star/attorn/getStarNum",{groupId:groupId},function(data) {
+
+                if (data.transGoods == "") {
+                    $("#haveTime").html(0);
+                    haveTime = 0;
+                } else {
+                    $("#haveTime").html(data.transGoods.num);
+                    haveTime = data.transGoods.num;
+                }
+            })
+            layui.qyForm.qyajax("/f/star/attorn/getStarDetail",{groupId:groupId},function(data){
+                $("#userName").html(data.goodsGroup.name);
+                var url = CONS_IMG_URL + data.goodsGroup.image;
+                $("#img").html('<img src="'+url+'">');
+			})
+
+            //加载应卖 和 应买单
+            layui.qyForm.qyajax("/f/app/transBuy/transBuyList", {groupId: groupId}, function (data) {
+                $("#temp-transBuyList").html("");
+                $("#temp-transSellList").html("");
+                var html = template('tpl-transBuyList', data);
+                $("#temp-transBuyList").append(html);
+                var html = template('tpl-transSellList', data);
+                $("#temp-transSellList").append(html);
+
+            });
+        }
+
+        function buy(money,newNum){
+
+            layui.layer.open({
+                title: [
+                    '应卖单',
+                    'color:#32314f;margin:0;border-bottom:1px solid #dfdfdf;font-size:16px;'
+                ],
+                anim: 'up',
+                className: 'popuo-login',
+                content: '<div><span>买入价格：</span id="prices"><span>'+money+'元/秒</span></div><div><span>可买数量：</span><span>' + newNum + '秒</span></div><div><span>可用余额：</span><span id="userMoney"> ' + userinfo.money + '元</span></div><div><span>委托数量：</span><input type="text" id="promiseSellNum"><span>秒</span></div>',
+                btn: ['确认','取消'],
+                yes: function () {
+                    var promiseSellNum = $("#promiseSellNum").val();
+                    if (!isPositiveNum(promiseSellNum)) {
+                        layui.qyWin.toast("委托数量不合法!");
+                        return;
+                    }
+                    if(saveFlag){
+                        return;
+                    }
+                    saveFlag = true;
+                    layui.qyForm.qyajax("/f/app/transBuy/promiseSell", {
+                        "groupId": groupId,
+                        "number": promiseSellNum,
+                        "money": money
+                    }, function (data) {
+                        layui.qyWin.toast(data.info);
+                        setTimeout(function () {
+                            saveFlag = false;
+                        },1000);
+                        initData();
+                    },function (ret) {
+                        setTimeout(function () {
+                            saveFlag = false;
+                            initData();
+                        },1000);
+                    });
+                }
+            });
+        }
+
+        //卖
+        function sell(money,num){
+            layui.layer.open({
+                title: [
+                    '应买单',
+                    'color:#32314f;margin:0;border-bottom:1px solid #dfdfdf;font-size:16px;'
+                ],
+                anim: 'up',
+                className: 'popuo-login',
+                content: '<div><span>价格：</span id="prices"><span>' + money + '元/秒</span></div><div><span>持有秒数：</span><span id="transnum">' + haveTime + '秒</span></div><div><span>委托数量：</span><input type="text" id="numbers"><span>秒</span></div>',
+                btn: ['确认','取消'],
+                yes: function (index, layero) {
+
+                    var numbers = $("#numbers").val();
+                    if(numbers>haveTime){
+						layui.qyWin.toast("持有时间不足。");
+						return;
+                    }
+                    if (!isPositiveNum(numbers)) {
+                        layui.qyWin.toast("委托数量不合法!");
+                        return;
+                    }
+                    if(saveFlag){
+                        return;
+                    }
+                    saveFlag = true;
+                    layui.qyForm.qyajax("/f/app/transBuy/promiseBuy", {
+                        groupId: groupId,
+                        num: numbers,
+                        money: money
+                    }, function (data) {
+                        layui.qyWin.toast(data.info);
+                        setTimeout(function () {
+                            saveFlag = false;
+                        },1000);
+                        $(".layui-m-layer").hide();
+                        initData();
+                    },function (ret) {
+
+                        setTimeout(function () {
+                            saveFlag = false;
+                            initData();
+                        },1000);
+                    });
+                }
+            });
+        }
+
+        //数量是否合法
+        function isPositiveNum(num) {
+            var re = /^[0-9]*[1-9][0-9]*$/;
+            return re.test(num);
+        }
+
+        function jiaoyi(flag){
+
+            if(flag == 1){
+                layui.qyWin.win("faqi-qiugou","faqi-qiugou.html?groupId="+groupId+"&goodsId="+goodsId,{});
+            }else {
+                layui.qyWin.win("faqi-zhuanrang","faqi-zhuanrang.html?groupId="+groupId+"&goodsId="+goodsId,{});
+            }
+
+        }
+
+        function jifenjilu() {
+			layui.qyWin.win("zhuanrang-detail","zhuanrang-detail.html?groupId="+groupId,{});
+        }
+
+        function duihuan(flag) {
+            if(flag == 1){
+                layui.qyWin.win("chanpin","chanpin.html?groupId="+groupId,{});
+            }else {
+                layui.qyWin.win("duihuanjifen","duihuanjifen.html?groupId="+groupId+"&goodsId="+goodsId,{});
+            }
+        }
+
+	</script>
+</html>

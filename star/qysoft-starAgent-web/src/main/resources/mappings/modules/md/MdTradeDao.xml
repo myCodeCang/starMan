@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.md.dao.MdTradeDao">
+
+    <sql id="mdTradeColumns">
+        a.id AS "id",
+        a.group_id AS "groupId",
+        a.user_id AS "userId",
+        a.user_name AS "userName",
+        a.price AS "price",
+        a.publish_num AS "publishNum",
+        a.remain_num AS "remainNum",
+        a.type AS "type",
+        a.bond AS "bond",
+        a.profit AS "profit",
+        a.state AS "state",
+        a.create_date AS "createDate",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag",
+        b.name AS "name",
+        u.true_name AS "trueName"
+    </sql>
+
+    <sql id="mdTradeColumns2">
+        a.id AS "id",
+        a.group_id AS "groupId",
+        a.user_id AS "userId",
+        a.user_name AS "userName",
+        a.price AS "price",
+        a.publish_num AS "publishNum",
+        a.remain_num AS "remainNum",
+        a.type AS "type",
+        a.bond AS "bond",
+        a.profit AS "profit",
+        a.state AS "state",
+        a.create_date AS "createDate",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag"
+    </sql>
+
+    <sql id="mdTradeJoins">
+        LEFT JOIN base_goods_group b ON b.id = a.group_id
+        LEFT JOIN user_userinfo u ON u.user_name = a.user_name
+    </sql>
+
+    <select id="get" resultType="MdTrade">
+        SELECT
+        <include refid="mdTradeColumns"/>
+        FROM md_trade a
+        <include refid="mdTradeJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getSellOnePrice" resultType="MdTrade">
+        SELECT
+        a.price
+        FROM md_trade a
+        WHERE a.group_id = #{groupId} AND a.type = #{type} AND state = 4 ORDER BY a.price ASC   LIMIT 1
+    </select>
+
+    <select id="getLock" resultType="MdTrade">
+        SELECT
+        <include refid="mdTradeColumns2"/>
+        FROM md_trade a
+        WHERE a.id = #{id}
+        for UPDATE
+    </select>
+
+    <select id="getBuyGroupListLimit" resultType="MdTrade">
+        SELECT
+        a.group_id AS "groupId",  a.price AS "price",a.publish_num AS "publishNum" , sum(remain_num) AS "nowNum"
+        FROM md_trade a
+        WHERE  a.group_id = #{groupId}
+        AND a.state = #{status} and a.type = #{type}
+        AND DATE_FORMAT(a.create_date, '%Y-%m-%d') = DATE_FORMAT(#{createDate}, '%Y-%m-%d')
+        group by  a.price , a.group_id
+        <choose>
+            <when test="order !=null and order != ''">
+                ORDER BY ${order}
+            </when>
+            <otherwise>
+                ORDER BY a.price ASC
+            </otherwise>
+        </choose>
+        <if test="top != null and top != ''">
+            LIMIT #{top}
+        </if>
+    </select>
+
+    <select id="findList" resultType="MdTrade">
+        SELECT
+        <include refid="mdTradeColumns"/>
+        FROM md_trade a
+        <include refid="mdTradeJoins"/>
+        <where>
+            <if test="userId != null and userId != ''">
+                AND a.user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND a.user_name = #{userName}
+            </if>
+            <if test="groupId != null and groupId != ''">
+                AND a.group_id = #{groupId}
+            </if>
+            <if test="type >0">
+                AND a.type = #{type}
+            </if>
+            <if test="state>0">
+                AND a.state = #{state}
+            </if>
+
+            <if test="createDateBegin != null and createDateBegin != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &gt;=  DATE_FORMAT(#{createDateBegin}, '%Y-%m-%d')
+            </if>
+            <if test="createDateEnd != null and createDateEnd != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &lt;=   DATE_FORMAT(#{createDateEnd}, '%Y-%m-%d')
+            </if>
+            <if test="createDateTimeBegin != null and createDateTimeBegin != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i:%s') &gt;=  DATE_FORMAT(#{createDateTimeBegin}, '%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="createDateTimeEnd != null and createDateTimeEnd != ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i:%s') &lt;=   DATE_FORMAT(#{createDateTimeEnd}, '%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="createDate!= null and createDate!= ''">
+                AND DATE_FORMAT(a.create_date, '%Y-%m-%d') = DATE_FORMAT(#{createDate}, '%Y-%m-%d')
+            </if>
+        </where>
+
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <insert id="insert">
+        INSERT INTO md_trade(
+        group_id,
+        user_id,
+        user_name,
+        price,
+        publish_num,
+        remain_num,
+        type,
+        bond,
+        fee,
+        profit,
+        state,
+        create_date,
+        update_date,
+        remarks,
+        del_flag
+        ) VALUES (
+        #{groupId},
+        #{userId},
+        #{userName},
+        #{price},
+        #{publishNum},
+        #{remainNum},
+        #{type},
+        #{bond},
+        #{fee},
+        #{profit},
+        #{state},
+        #{createDate},
+        #{updateDate},
+        #{remarks},
+        #{delFlag}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE md_trade SET
+        user_id = #{userId}
+        user_name = #{userName},
+        group_id = #{groupId},
+        publish_num = #{publishNum},
+        remain_num = #{remainNum},
+        price = #{price},
+        bond = #{bond},
+        fee = #{fee},
+        profit = #{profit},
+        type = #{type},
+        update_date = #{updateDate},
+        remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateTradeState">
+        UPDATE md_trade SET
+        state = #{state}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateRemainNum">
+        UPDATE md_trade SET
+        remain_num = #{remainNum}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateProfit">
+        UPDATE md_trade SET
+        profit = #{profit}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateBond">
+        UPDATE md_trade SET
+        bond = #{bond}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        delete from  md_trade
+        WHERE id = #{id}
+    </update>
+</mapper>

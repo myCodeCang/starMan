@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>商城</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<style>
+			.shangcheng img{border-radius: 8px;}
+		</style>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>商城</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content shangcheng">
+			<img src="../image/jifen.png" onclick="goShop()"/>
+			<a href="chicang-shopping.html"><img src="../image/chicang.png"/></a>
+		</div>
+	</body>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        layui.use(['qyWin','qyForm','qyShop'], initpage);
+        function initpage(){
+        }
+		function goShop(){
+			window.location.href=CONS_QY_SHOP_URL+"/app/index.php?i="+shopid+"&c=entry&m=ewei_shopv2&do=mobile&r=creditshop";
+		}
+	</script>
+</html>

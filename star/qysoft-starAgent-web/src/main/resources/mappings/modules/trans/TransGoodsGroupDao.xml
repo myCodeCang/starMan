@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.trans.dao.TransGoodsGroupDao">
+	<sql id="transGoodsGroupColumn">
+		a.id AS "id",
+		a.name AS "name",
+		a.title AS "title",
+		a.message AS "message",
+		a.detail AS "detail",
+		a.type AS "type",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.start_money AS "startMoney",
+		a.photo AS "photo"
+	</sql>
+
+	
+	<sql id="transGoodsGroupJoins">
+	</sql>
+    
+	<select id="get" resultType="TransGoodsGroup">
+		SELECT 
+			<include refid="transGoodsGroupColumn"/>
+		FROM trans_goods_group a
+		<include refid="transGoodsGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getTransListWithTrend" resultType="TransGoodsGroup">
+		SELECT
+		a.id AS "id",
+		a.name AS "name",
+		a.title AS "title",
+		a.message AS "message",
+		a.detail AS "detail",
+		a.type AS "type",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.photo AS "photo",
+		a.start_money as "startMoney",
+		IFNULL(t.now_money,0) AS "transBuyDayTrend.nowMoney",
+		IFNULL(t.start_money,0) AS "transBuyDayTrend.startMoney",
+		IFNULL(t.end_money,0) AS "transBuyDayTrend.endMoney",
+		IFNULL(t.hig_money,0) AS "transBuyDayTrend.higMoney",
+		IFNULL(t.low_money,0) AS "transBuyDayTrend.lowMoney",
+		IFNULL(t.amount,0) AS "transBuyDayTrend.amount",
+		t.add_date AS "transBuyDayTrend.addDate"
+		FROM trans_goods_group a
+		LEFT JOIN  (select * from  trans_buy_day_trend  where DATE_FORMAT(add_date, '%Y-%m-%d') =  DATE_FORMAT(#{trendDate}, '%Y-%m-%d'))  t ON t.group_id = a.id
+		WHERE a.status = #{status} AND a.del_flag = "0" ORDER BY a.id DESC
+	</select>
+
+
+	
+	<select id="findList" resultType="TransGoodsGroup">
+		SELECT 
+
+			<include refid="transGoodsGroupColumn"/>
+		FROM trans_goods_group a
+		<include refid="transGoodsGroupJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<when test="orderBy !=null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+		<if test="topLimit != null and topLimit != '' ">
+			limit 0,#{topLimit}
+		</if>
+	</select>
+
+	
+	<insert id="insert">
+		INSERT INTO trans_goods_group(
+			id,
+			name,
+			title,
+			message,
+			detail,
+			type,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			photo,
+			start_money,
+			status
+		) VALUES (
+			#{id},
+			#{name},
+			#{title},
+			#{message},
+			#{detail},
+			#{type},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{photo},
+			#{startMoney},
+			#{status}
+		)
+	</insert>
+
+
+	<update id="update">
+		UPDATE trans_goods_group SET
+			name = #{name},
+			photo = #{photo},
+			title = #{title},
+			start_money = #{startMoney},
+			status = #{status},
+			detail = #{detail}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		delete from  trans_goods_group
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

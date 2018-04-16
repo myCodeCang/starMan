@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>拍卖现场</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/swiper/swiper.min.css"/>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>拍卖现场</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn" href="paimaijilu.html">-->
+		        <!--<span class="sangedian"></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div id="temp_paimai" style="margin-bottom: 3.25rem;">
+
+		</div>
+		<div class="aui-content jilu">
+			<a href="paimaijilu.html">拍卖纪录</a>
+		</div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+	</body>
+
+	<script type="text/html" id="tpl_paimai">
+		{{if saleList.count == 0}}
+			<div class="aui-content wu-img">
+				<img src="../image/wupaimaijilu.png">
+			</div>
+
+		{{else}}
+		{{each saleList.list}}
+			<div class="aui-content paimai" {{$value.startTime < newDate ?'onclick=go('+$value.id+')':''}}>
+			<h3>
+				<span class="aui-pull-left aui-margin-l-5">
+					{{$value.startTime < newDate ?'正在拍卖':'即将开始'}}
+				</span>
+				{{ if $value.startTime < newDate}}
+					<span class="aui-pull-right text-red" id="getTime_{{$value.id}}">
+					</span>
+				{{/if}}
+				{{if $value.startTime > newDate}}
+					<span class="aui-pull-right text-red">
+						{{$value.startTime}}
+					</span>
+				{{/if}}
+			</h3>
+			<div class="aui-card-list-content">
+				<ul class="aui-list aui-media-list">
+					<li class="aui-list-item aui-list-item-middle">
+						<div class="aui-media-list-item-inner">
+							<div class="aui-list-item-media">
+								<img src="{{imgUrl+$value.baseGoodsGroup.thumb}}" >
+							</div>
+							<div class="aui-list-item-inner">
+								<div class="aui-list-item-text aui-margin-b-10">
+									<div class="aui-list-item-title">{{$value.baseGoodsGroup.name}}</div>
+									<div class="aui-list-item-right">起拍价:<span>￥{{$value.money}}/秒</span></div>
+								</div>
+								<div class="aui-list-item-text">
+									<div class="aui-list-item-title">{{$value.classify}}</div>
+									<div class="aui-list-item-right">当前价:<span class="text-red">￥{{$value.nowMoney}}/秒</span></div>
+								</div>
+							</div>
+						</div>
+					</li>
+
+				</ul>
+			</div>
+			</div>
+		{{/each}}
+		{{/if}}
+	</script>
+	<script type="text/javascript" src="../../static/qyScript/web/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="../../static/qyScript/web/jquery/jquery.countdown.js"></script>
+	<script type="text/javascript">
+        var min = 0;
+        var max = 0;
+        var poundage = 0;
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+
+        //apicloud 准备完成
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            var qyWin  = layui.qyWin;
+            loadData();
+        }
+        
+        function loadData() {
+            layui.qyForm.qyajax("/f/app/auction/selectAuctionList",{status:"0"},function(data){
+                data["imgUrl"]=CONS_IMG_URL;
+                data["newDate"]=dateForamte(new Date());
+                var html = template('tpl_paimai', data);
+                $("#temp_paimai").html(html);
+                for(var i=0;i<data.saleList.count;i++){
+                    var sale =data.saleList.list[i];
+                    $("#getTime_"+sale.id)
+                        .countdown(sale.endTime , function(event) {
+                            $(this).text(
+                                event.strftime('剩余时间：%D天%H:%M:%S')
+                            );
+					});
+				}
+
+            });
+
+
+        }
+
+        function go(id) {
+            layui.qyWin.win("paimai","paimai.html?id="+id,"");
+        }
+
+        function dateForamte(date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            var h = date.getHours();
+            var minute = date.getMinutes();
+            minute = minute < 10 ? ('0' + minute) : minute;
+            return y + '-' + m + '-' + d+' '+h+':'+minute;
+        };
+	</script>
+</html>

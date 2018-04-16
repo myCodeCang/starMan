@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>担保金</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/swiper/swiper.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn back" href="javascript:history.back(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>担保金</span>-->
+		    <!--</div>-->
+		    <!--&lt;!&ndash;<a class="aui-pull-right aui-btn">&ndash;&gt;-->
+		        <!--&lt;!&ndash;<span class="sangedian"></span>&ndash;&gt;-->
+		    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content danbao">
+            <ul class="aui-list aui-media-list">
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media" id="img">
+
+                        </div>
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text aui-margin-b-10">
+                                <div class="aui-list-item-title aui-font-size-16" id="name"></div>
+                            </div>
+                            <div class="aui-list-item-text" id="description">
+
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+		</div>
+		<div class="aui-content danbao-e aui-margin-t-15">
+			<h3><span class="text-blue">所需保证金：</span><span class="text-red" id="money"></span></h3>
+		</div>
+		<div class="aui-content name-but" onclick="pay()">
+			<div class="aui-btn aui-btn-block">立即支付</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var payFlag = false;
+		var id=0;
+
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+
+        //apicloud 准备完成
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            var qyWin  = layui.qyWin;
+			id=layui.qyForm.GetQueryString("id");
+            loadData(id);
+
+        }
+
+        function loadData(id) {
+            layui.qyForm.qyajax("/f/app/auction/auctionInfo",{id:id},function(data){
+                $("#name").text(data.auctionInfo.baseGoodsGroup.name);
+                $("#money").text(data.auctionMoney+"元");
+                $("#img").html('<img src="'+CONS_IMG_URL+data.auctionInfo.baseGoodsGroup.thumb+'"  class="aui-img-round aui-list-img-sm">');
+                $("#description").text(data.auctionInfo.baseGoodsGroup.description);
+            });
+        }
+
+
+
+        function pay() {
+
+            layui.layer.open({
+                content: '您确定要支付担保金吗？'
+                ,btn: ['确认', '取消']
+                ,shadeClose: false
+                ,yes: function(index){
+                    if(payFlag){
+                        return;
+                    }
+                    payFlag=true;
+                    layui.qyForm.qyajax("/f/app/auction/payAuctionMoney",{id:id},function(data){
+                        layui.qyWin.toast(data.info);
+                        setTimeout(function () {
+                            location.href=document.referrer;
+                        },2500);
+
+                    },function (ret) {
+                        payFlag = false;
+                        if(ret.errorCode=="1001"){
+
+                        }
+                        if(ret.errorCode=="1002"){
+                            setTimeout(function () {
+                                location.href=document.referrer;
+                            },2500);
+                        }
+                    });
+                    layui.layer.close(index);
+                },no:function(index){
+                    payFlag = false;
+                    layui.layer.close(index);
+                }
+            });
+
+        }
+	</script>
+</html>

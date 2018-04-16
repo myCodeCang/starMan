@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>拍卖</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/swiper/swiper.min.css"/>
+		<style>
+			@media screen and (min-width: 320px) and (max-width: 360px){
+				.table-pai{height: 214px;overflow: scroll;}
+			}
+			@media screen and (min-width: 361px) and (max-width: 390px){
+				.table-pai{height: 305px;overflow: scroll;}
+			}
+			@media screen and (min-width: 391px) and (max-width: 420px){
+				.table-pai{height: 354px;overflow: scroll;}
+			}
+			@media screen and (min-width: 421px) and (max-width: 500px){
+				.table-pai{height: 400px;overflow: scroll;}
+			}
+		</style>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>拍卖</span>-->
+		    <!--</div>-->
+		    <!--&lt;!&ndash;<a class="aui-pull-right aui-btn">&ndash;&gt;-->
+		        <!--&lt;!&ndash;<span class="sangedian"></span>&ndash;&gt;-->
+		    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content paimai">
+			<h3><span class="aui-pull-left aui-margin-l-5">当前拍卖</span><span class="aui-pull-right text-red" id="getTime"></span></h3>
+			<div class="aui-card-list-content">
+	            <ul class="aui-list aui-media-list">
+	                <li class="aui-list-item aui-list-item-middle">
+	                    <div class="aui-media-list-item-inner">
+	                        <div class="aui-list-item-media" id="img">
+
+	                        </div>
+	                        <div class="aui-list-item-inner">
+	                            <div class="aui-list-item-text aui-margin-b-10">
+	                                <div class="aui-list-item-title" id="name"></div>
+	                                <div class="aui-list-item-right">起拍价:<span id="money"></span></div>
+	                            </div>
+	                            <div class="aui-list-item-text">
+	                                <div class="aui-list-item-title" id="description" ></div>
+	                                <div class="aui-list-item-right">
+										<div class="aui-btn" id="bzYes" style="display:none;background: #323150;color:#fff;font-size:0.6rem;height:1.3rem;line-height: 1.3rem;">已交保证金</div>
+										<div class="aui-btn" id="bzNo" style="display:none;background: #ec3853;color:#fff;font-size:0.6rem;height:1.3rem;line-height: 1.3rem;" onclick="payGuaranty()">未交保证金</div>
+									</div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </li>
+	            </ul>
+	        </div>
+	        <div class="aui-grid">
+	        	<div class="aui-row">
+	        		<div class="aui-col-xs-6">
+	        			<span class="text-red" id="num"></span>
+	        			<span>时间</span>
+	        		</div>
+	        		<div class="aui-col-xs-6">
+	        			<span class="text-red"><span class="aui-font-size-12">￥</span><span id="realMoney"></span></span>
+	        			<span>当前价格</span>
+	        		</div>
+	        	</div>
+	        </div>
+		</div>
+		<div class="aui-content table-pai aui-margin-b-5">
+		    <table>
+		        <thead>
+		            <tr>
+		            	<th>机构代码</th>
+			            <th>出价</th>
+			            <th>状态</th>
+			            <th>时间</th>
+		            </tr>
+		        </thead>
+		        <tbody id="temp_log">
+		        	<!--<tr>-->
+		                <!--<td>5262554</td>-->
+		                <!--<td>9.9</td>-->
+		                <!--<td>3次</td>-->
+		                <!--<td>竞价成功</td>-->
+		            <!--</tr>-->
+		        </tbody>
+		    </table>
+		</div>
+		<p class="pai-p"><a href="" id="rule">拍卖规则</a></p>
+		<div class="aui-content pai-but">
+			<div class="aui-grid">
+	        	<div class="aui-row">
+	        		<div class="aui-col-xs-6" onclick="pay(5)">
+	        			<div class="aui-btn aui-btn-block">固定竞价x5</div>
+	        		</div>
+	        		<div class="aui-col-xs-6" onclick="pay(1)">
+	        			<div class="aui-btn aui-btn-block">固定竞价x1</div>
+	        		</div>
+	        	</div>
+	        </div>
+		</div>
+	</body>
+	<script type="text/html" id="tpl_log">
+		{{each realData}}
+			<tr>
+				<td>{{$value.auctionUser}}</td>
+				<td>{{$value.auctionMoney}}</td>
+				<td>{{$value.status==1?'竞价成功':'竞价失败'}}</td>
+				<td>{{$value.createDate}}</td>
+			</tr>
+		{{/each}}
+	</script>
+	<script type="text/javascript" src="../../static/qyScript/web/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="../../static/qyScript/web/jquery/jquery.countdown.js"></script>
+	<script type="text/javascript">
+        var lastId = 0;
+        var moneyBase = 0;
+        var id=0;
+        var payFlag=false;
+        var baozheng = false;
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+
+        //apicloud 准备完成
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            var qyWin  = layui.qyWin;
+			id=layui.qyForm.GetQueryString("id");
+            loadData(id);
+            realData(id)
+            baozhengVerify(id);
+            window.setInterval("realData("+id+")",5000);
+            auctionRule();
+        }
+		
+        function loadData(id) {
+			layui.qyForm.qyajax("/f/app/auction/auctionInfo",{id:id},function(data){
+			    if(data.auctionInfo.status != '0'){
+                    layui.qyWin.toast("拍卖已结束");
+                    setTimeout(function () {
+                        window.location.href="index.html";
+                    },2500);
+				}
+                $("#name").text(data.auctionInfo.baseGoodsGroup.name);
+                moneyBase = data.auctionInfo.normMoney;
+                $("#money").text(data.auctionInfo.money);
+                $("#img").html('<img src="'+CONS_IMG_URL+data.auctionInfo.baseGoodsGroup.thumb+'">');
+                $("#realMoney").text(data.auctionInfo.nowMoney);
+                $("#num").text(data.auctionInfo.num+"秒");
+                $("#description").text(data.auctionInfo.classify);
+                $("#getTime")
+                    .countdown(data.auctionInfo.endTime , function(event) {
+                        $(this).text(
+                            event.strftime('剩余时间：%D天%H:%M:%S')
+                        );
+				});
+			});
+        }
+
+        
+        function auctionRule() {
+            layui.qyForm.qyajax("/f/webArticle/detailByKeyword",{keywords:"auction_rule"},function(data){
+				$("#rule").attr("href","gonggao-detail.html?id="+data.agreement.id+"&title=拍卖规则");
+            });
+        }
+        
+        function baozhengVerify(id) {
+            layui.qyForm.qyajax("/f/app/auction/baozhengVerify",{id:id},function(data){
+                baozheng = data.pay;
+				if(data.pay){
+                    $("#bzYes").show();
+                    $("#bzNo").hide();
+				}else{
+                    $("#bzYes").hide();
+                    $("#bzNo").show();
+				}
+            });
+        }
+
+        function realData(id) {
+            layui.qyForm.qyajax("/f/app/auction/realDataSelect",{id:id,lastId:lastId},function(data){
+                if(data.auction.status != '0'){
+                    layui.qyWin.toast("拍卖已结束");
+                    setTimeout(function () {
+                        window.location.href="index.html";
+                    },2500);
+                }
+                if(data.realData.length>0){
+                    lastId = data.realData[0].id;
+                    $("#realMoney").text(data.realData[0].auctionMoney);
+                }
+                var html = template("tpl_log",data);
+                $("#temp_log").prepend(html);
+            });
+        }
+        
+        
+        function payGuaranty() {
+            layui.qyWin.win("danbao","danbaojia.html?id="+id,"");
+        }
+        
+        function pay(multiple) {
+            if(payFlag){
+                return;
+			}
+            layui.layer.open({
+                content: '您确定要固定竞价x'+multiple+'吗？'
+                ,btn: ['确认', '取消']
+				,shadeClose: false
+                ,yes: function(index){
+                    payFlag=true;
+                    layui.qyForm.qyajax("/f/app/auction/makingAnOffer",{id:id,multiple:multiple},function(data){
+                        layui.qyWin.toast(data.info);
+
+                        payFlag = false;
+                    },function (ret) {
+                        payFlag = false;
+                        if(ret.errorCode=="1001"){
+
+                        }
+                        if(ret.errorCode=="1002"){
+                            setTimeout(function () {
+                                window.location.href="javascript:history.go(-1)";
+                            },2500);
+						}
+                        if(ret.errorCode=="1003"){
+//                            setTimeout("payGuaranty()",2500);
+                        }
+                    });
+                    layui.layer.close(index);
+                },no:function(index){
+                    payFlag = false;
+                    layui.layer.close(index);
+                }
+            });
+
+        }
+	</script>
+</html>

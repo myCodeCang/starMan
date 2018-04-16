@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.trans.dao.TransBuyLogDao">
+    
+	<sql id="transBuyLogColumns">
+		a.id AS "id",
+		a.user_name AS "userName",
+		a.trans_user_name AS "transUserName",
+		d.true_name AS "transUserTrueName",
+		a.group_id AS "groupId",
+		a.apply_id AS "applyId",
+		a.num AS "num",
+		a.money AS "money",
+		a.profit AS "profit",
+		a.is_check AS "isCheck",
+		a.message AS "message",
+		a.type AS "type",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		u.true_name As "trueName",
+		g.name AS "goodsName",
+		a.add_time AS "addTime",
+		a.buy_id as "buyId"
+	</sql>
+	
+	<sql id="transBuyLogJoins">
+		LEFT JOIN user_userinfo u ON u.user_name = a.user_name
+		LEFT JOIN user_userinfo d ON d.user_name = a.trans_user_name
+		LEFT JOIN base_goods_group g ON g.id = a.group_id
+	</sql>
+    
+	<select id="get" resultType="TransBuyLog">
+		SELECT 
+			<include refid="transBuyLogColumns"/>
+		FROM trans_buy_log a
+		<include refid="transBuyLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TransBuyLog">
+		SELECT 
+
+			<include refid="transBuyLogColumns"/>
+		FROM trans_buy_log a
+		<include refid="transBuyLogJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="transUserName != null and transUserName != ''">
+				AND a.trans_user_name = #{transUserName}
+			</if>
+			<if test="addTimeBegin != null and addTimeBegin != ''">
+				AND a.create_date &gt;= #{addTimeBegin}
+			</if>
+
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="applyId != null and applyId !='' ">
+				AND a.apply_id = #{applyId}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="buyId != null and buyId != ''">
+				AND a.buy_id = #{buyId}
+			</if>
+			<if test="typeArray != null and typeArray != ''">
+				AND a.type  in
+				<foreach item="item" index="index" collection="typeArray" open="("
+						 separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+
+			<if test="createDateBegin != null and createDateBegin != ''">
+				AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &gt;=  DATE_FORMAT(#{createDateBegin}, '%Y-%m-%d')
+			</if>
+			<if test="createDateEnd != null and createDateEnd != ''">
+				AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &lt;=   DATE_FORMAT(#{createDateEnd}, '%Y-%m-%d')
+			</if>
+
+			<if test="createDateTimeBegin != null and createDateTimeBegin != ''">
+				AND DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i:%s') &gt;=  DATE_FORMAT(#{createDateTimeBegin}, '%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="createDateTimeEnd != null and createDateTimeEnd != ''">
+				AND DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i:%s') &lt;=   DATE_FORMAT(#{createDateTimeEnd}, '%Y-%m-%d %H:%i:%s')
+			</if>
+
+			<if test="moneyBegin != null and moneyBegin != ''">
+				AND a.money  &gt;= #{moneyBegin}
+			</if>
+			<if test="isCheck != null and isCheck != ''">
+				AND a.is_check = #{isCheck}
+			</if>
+
+
+		</where>
+
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	
+	<insert id="insert">
+		INSERT INTO trans_buy_log(
+			id,
+			user_name,
+			trans_user_name,
+			group_id,
+			apply_id,
+			num,
+			money,
+			message,
+			type,
+			profit,
+			is_check,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			buy_id
+		) VALUES (
+			#{id},
+			#{userName},
+			#{transUserName},
+			#{groupId},
+			#{applyId},
+			#{num},
+			#{money},
+			#{message},
+			#{type},
+			#{profit},
+			#{isCheck},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{buyId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE trans_buy_log SET 	
+			user_name = #{userName},
+			trans_user_name = #{transUserName},
+			group_id = #{groupId},
+			is_check = #{isCheck},
+			num = #{num},
+			money = #{money},
+			message = #{message},
+			type = #{type},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			buy_id = #{buyId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		delete from  trans_buy_log
+		WHERE id = #{id}
+	</update>
+
+	<select id="getChartDatasBuyGroup" resultType="TransBuyLog">
+		SELECT
+			<include refid="transBuyLogColumns"/>
+		FROM trans_buy_log a
+			<include refid="transBuyLogJoins"/>
+		WHERE  a.group_id = #{groupId} AND a.del_flag = "0"
+		and (a.type = 1 or a.type = 2) order by a.create_date asc
+	</select>
+
+	<select id="getTransStatistics" parameterType="java.lang.String" resultType="com.thinkgem.jeesite.modules.trans.entity.TransStatistics">
+		${sql}
+	</select>
+
+	<select id="getTransStatisticsMinute" resultType="com.thinkgem.jeesite.modules.trans.entity.TransStatistics">
+		SELECT
+			a.id AS "id",
+			a.group_id AS "groupId",
+			a.num AS "num",
+			a.money AS "money",
+			a.profit AS "profit",
+			a.create_date AS "createDate"
+		FROM trans_buy_log_minute a
+		WHERE  a.group_id = #{groupId} AND a.create_date &gt; #{beginTime} AND a.create_date &lt; NOW() ORDER BY a.create_date ASC
+	</select>
+
+	<select id="getTransBuySumValue" resultType="TransBuyLog">
+		SELECT
+		sum(num) AS "num",sum(num*money) AS "money"
+		FROM trans_buy_log a
+		<where>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+
+
+			<if test="typeArray != null and typeArray != ''">
+				AND a.type  in
+				<foreach item="item" index="index" collection="typeArray" open="("
+						 separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+
+			<if test="createDateBegin != null and createDateBegin != ''">
+				AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &gt;=  DATE_FORMAT(#{createDateBegin}, '%Y-%m-%d')
+			</if>
+			<if test="createDateEnd != null and createDateEnd != ''">
+				AND DATE_FORMAT(a.create_date, '%Y-%m-%d') &lt;=   DATE_FORMAT(#{createDateEnd}, '%Y-%m-%d')
+			</if>
+		</where>
+	</select>
+
+	<select id="getFirstChartDataByDay" resultType="com.thinkgem.jeesite.modules.trans.entity.TransStatistics">
+		SELECT
+		a.id AS "id",
+		a.group_id AS "groupId",
+		a.num AS "num",
+		a.money AS "money",
+		a.profit AS "profit",
+		a.create_date AS "createDate"
+		FROM trans_buy_log_minute a
+		WHERE  a.group_id = #{groupId} AND a.create_date &gt; TIMESTAMP(DATE(SYSDATE())) AND a.create_date &lt; NOW() ORDER BY a.create_date ASC LIMIT 1
+	</select>
+</mapper>

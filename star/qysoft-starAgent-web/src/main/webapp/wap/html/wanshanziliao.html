@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>完善资料</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>完善资料</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content problem-ziliao">
+			<ul class="aui-list">
+				<a href="nicheng.html">
+				 <li class="aui-list-item">
+		            <div class="aui-list-item-inner aui-list-item-arrow">
+		                <div class="aui-list-item-title">昵称</div>
+		                <div class="aui-pull-right" id="nick_name"></div>
+		            </div>
+		        </li>
+				</a>
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-title">编号</div>
+						<div class="aui-pull-right" id="userName"></div>
+					</div>
+				</li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner ">
+		                <div class="aui-list-item-title">电话</div>
+		                <div class="aui-pull-right" id="phone"></div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner ">
+		                <div class="aui-list-item-title">真实姓名</div>
+		                <div class="aui-pull-right" id="true_name"></div>
+		            </div>
+		        </li>
+				<a href="id-card.html">
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner aui-list-item-arrow">
+		                <div class="aui-list-item-title">身份证号</div>
+		                <div class="aui-pull-right" id="id_card"></div>
+		            </div>
+		        </li>
+				</a>
+				<a href="bangding-card.html">
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner aui-list-item-arrow">
+		                <div class="aui-list-item-title">绑定银行卡</div>
+		            </div>
+		        </li>
+				</a>
+				<!--<a href="shouhuodizhi.html">-->
+		        <!--<li class="aui-list-item">-->
+		            <!--<div class="aui-list-item-inner aui-list-item-arrow">-->
+		                <!--<div class="aui-list-item-title">收货地址</div>-->
+		            <!--</div>-->
+		        <!--</li>-->
+				<!--</a>-->
+		    </ul>
+		</div>  
+	</body>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        layui.use(['qyWin','qyForm','qyShop'], initpage);
+        function initpage(){
+            getUserinfo();
+        }
+        //获取用户基本信息
+        function  getUserinfo() {
+            layui.qyForm.qyajax("/f/app/userinfo/userinfo",{},function(data){
+                $("#nick_name").html(data.user.userNicename);
+                $("#userName").html(data.user.userName);
+                $("#phone").html(data.user.mobile);
+                $("#true_name").html(data.user.trueName);
+                $("#id_card").html(data.user.idCard);
+            });
+        }
+
+	</script>
+</html>

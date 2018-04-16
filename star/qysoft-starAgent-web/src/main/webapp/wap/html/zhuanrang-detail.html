@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>转让记录</title>
+		<link rel="stylesheet" type="text/css" href="../../static/qyScript/web/layer/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn back" href="javascript :history.back(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>转让信息</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div id="temp-duihuanList"></div>
+
+	</body>
+	<script id="tpl-duihuanList" type="text/html">
+		{{if pages.count == 0}}
+			<img src="../image/wu.png" style="display: block;margin:0 auto;margin-top:90px;width:45%;">
+		{{/if}}
+		{{each pages.list}}
+		<div class="aui-content meat">
+			<h3><span class="aui-pull-left">{{$value.goodsName}}</span><span class="aui-pull-right">{{$value.type == 2 ? "出售" : "买入"}}</span></h3>
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-6">
+						<span>当前数量：{{$value.nowNum}}</span>
+						<span>发布价格：{{$value.money}}</span>
+					</div>
+					<div class="aui-col-xs-6">
+						<span>数量：{{$value.sellNum}}</span>
+						<span>{{$value.createDate}}</span>
+					</div>
+				</div>
+			</div>
+			<div class="meat-but">
+				<div class="aui-pull-right aui-btn" onclick="downSell({{$value.id}})">下架</div>
+			</div>
+		</div>
+		{{/each}}
+	</script>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        var groupId;
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            var qyWin  = layui.qyWin;
+            var qyForm = layui.qyForm;
+            groupId = layui.qyForm.GetQueryString("groupId");
+
+				data();
+        }
+
+        function data() {
+            $("#temp-duihuanList").html("");
+            layui.qyForm.pageajax(loadData,{
+                "pageNo":"0",
+                "pageSize":"10",
+                "groupId":groupId
+            },"temp-duihuanList");
+        }
+
+        function loadData(param,callback){
+            layui.qyForm.qyajax("/f/star/attorn/getAttornBuy",param,function (data) {
+                var pageData = data.pages;
+                var html = template('tpl-duihuanList', data);
+                $("#temp-duihuanList").append(html);
+
+                if(callback){
+                    callback(pageData);
+				}
+            })
+        }
+        function downSell(id) {
+            layui.layer.open({
+				content:"您确定要下架吗？",
+				btn:['确定','取消'],
+				shadeClose:true,
+				yes:function (index) {
+                    layui.qyForm.qyajax("/f/star/attorn/promiseCancel",{buyId:id},function (res) {
+                        layui.qyWin.toast(res.info);
+                        data();
+                    })
+                    layui.layer.close(index);
+                }
+			}
+			)
+        }
+
+
+	</script>
+</html>

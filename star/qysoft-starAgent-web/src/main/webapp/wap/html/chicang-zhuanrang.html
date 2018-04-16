@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>持仓转让</title>
+		<link rel="stylesheet" type="text/css" href="../../static/qyScript/web/layer/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>持仓转让</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class="sangedian"></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content chichan-zhuanr-tan" id="tan">
+			<h3>选择转让名人</h3>
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang1.png"/>
+						<span>王青</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang2.png"/>
+						<span>王菲</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang3.png"/>
+						<span>刘亦菲</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang1.png"/>
+						<span>刘德华</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang2.png"/>
+						<span>王凯</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang3.png"/>
+						<span>张学友</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang2.png"/>
+						<span>王凯</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang3.png"/>
+						<span>张学友</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang2.png"/>
+						<span>王凯</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang3.png"/>
+						<span>张学友</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang2.png"/>
+						<span>王凯</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang3.png"/>
+						<span>张学友</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang2.png"/>
+						<span>王凯</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang3.png"/>
+						<span>张学友</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang2.png"/>
+						<span>王凯</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<img src="../image/touxiang3.png"/>
+						<span>张学友</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="mask"></div>
+		<div class="aui-content chichan-zhuanr">
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-2">
+						<img src="../image/touxiang1.png"/>
+						<span>王青</span>
+					</div>
+					<div class="aui-col-xs-2">
+						<img src="../image/touxiang2.png"/>
+						<span>王菲</span>
+					</div>
+					<div class="aui-col-xs-2">
+						<img src="../image/touxiang3.png"/>
+						<span>刘亦菲</span>
+					</div>
+					<div class="aui-col-xs-2">
+						<img src="../image/touxiang1.png"/>
+						<span>刘德华</span>
+					</div>
+					<div class="aui-col-xs-2">
+						<img src="../image/touxiang2.png"/>
+						<span>王凯</span>
+					</div>
+					<div class="aui-col-xs-2">
+						<img src="../image/touxiang3.png"/>
+						<span>张学友</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-content chichan-but">
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-6" onclick="zhuanShow()">
+						<i class="zhuanrang"></i>&nbsp;&nbsp;<span>转让</span>
+					</div>
+					<div class="aui-col-xs-6">
+						<i class="shougou"></i>&nbsp;&nbsp;<span>收购</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-content chichan-gou aui-margin-t-15">
+			<h3>
+				<span class="aui-pull-left">转让&nbsp;<span class="aui-text-danger">王青</span>&nbsp;<span></span>200秒</span>
+				<span class="aui-pull-right">08-09 10:20:30</span>
+			</h3>
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-4 gou-one">
+						<div>
+							<img src="../image/touxiang3.png"/>&nbsp;&nbsp;<span>大大横</span>
+						</div>
+						<p><span>转让价格：</span><span>￥15.00</span></p>
+						<p><span>价值：</span><span>￥355.00</span></p>
+					</div>
+					<div class="aui-col-xs-4 gou-two">
+						<img src="../image/buy.png"/>
+					</div>
+					<div class="aui-col-xs-4 gou-three">
+						<div>
+							<img src="../image/jia.png"/>&nbsp;&nbsp;<span>等待加入</span>
+						</div>
+						<div class="aui-btn">立即求购</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+		<div class="aui-content chichan-gou aui-margin-t-15">
+			<h3>
+				<span class="aui-pull-left">转让&nbsp;<span class="aui-text-danger">王青</span>&nbsp;<span></span>200秒</span>
+				<span class="aui-pull-right">08-09 10:20:30</span>
+			</h3>
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-4 gou-one">
+						<div>
+							<img src="../image/touxiang3.png"/>&nbsp;&nbsp;<span>大大横</span>
+						</div>
+						<p><span>转让价格：</span><span>￥15.00</span></p>
+						<p><span>价值：</span><span>￥355.00</span></p>
+					</div>
+					<div class="aui-col-xs-4 gou-two">
+						<img src="../image/buy.png"/>
+					</div>
+					<div class="aui-col-xs-4 gou-three">
+						<div>
+							<img src="../image/jia.png"/>&nbsp;&nbsp;<span>等待加入</span>
+						</div>
+						<div class="aui-btn">立即求购</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-content chichan-deal aui-margin-t-15">
+			<h3>
+				<span class="aui-pull-left">转让&nbsp;<span class="aui-text-danger">王青</span>&nbsp;<span></span>200秒</span>
+				<span class="aui-pull-right">08-09 10:20:30</span>
+			</h3>
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-4 deal-one">
+						<div>
+							<img src="../image/touxiang3.png"/>&nbsp;&nbsp;<span>大大横</span>
+						</div>
+						<p><span>转让价格：</span><span>￥15.00</span></p>
+						<p><span>价值：</span><span>￥355.00</span></p>
+					</div>
+					<div class="aui-col-xs-4 deal-two">
+						<img src="../image/deal.png"/>
+					</div>
+					<div class="aui-col-xs-4 deal-three">
+						<div>
+							<span>大大横</span>&nbsp;&nbsp;<img src="../image/touxiang3.png"/>
+						</div>
+						<p><span>转让价格：</span><span>￥15.00</span></p>
+						<p><span>价值：</span><span>￥355.00</span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+	</body>
+	<script src="../script/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function zhuanShow(){
+			$('#tan').show();
+			$('.mask').show();
+		}
+		$('.mask').on('click',function(){
+			$('#tan').hide();
+			$(this).hide();
+		})
+	</script>
+	<script type="text/javascript">
+
+
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+
+        //apicloud 准备完成
+        layui.use(['qyWin', 'qyForm', 'template', 'layer'], initpage);
+
+
+        //初始化页面
+        function initpage() {
+            initData();
+        }
+
+        function qiugou() {
+            layui.qyForm.qyajax("/f/app/transBuy/publishBuy",{},function(data){
+
+            });
+        }
+
+	</script>
+</html>

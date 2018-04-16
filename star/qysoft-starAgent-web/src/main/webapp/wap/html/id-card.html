@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>身份证号</title>
+
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<script type="text/javascript" src="../css/script/jquery1.12.4.js"></script>
+		<script type="text/javascript" src="../css/script/ajaxfileupload.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<style>
+			.shangchuang-img img.shang-img{width:100%;height:110px;}
+		</style>
+
+
+	</head>
+
+	</head>
+	<body class="bg-gray">
+	<!--<header class="aui-bar aui-bar-nav home">-->
+		<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+			<!--<span class="aui-iconfont aui-icon-left"></span>-->
+		<!--</a>-->
+		<!--<div class="aui-title">-->
+			<!--<span>身份证号</span>-->
+		<!--</div>-->
+		<!--<a class="aui-pull-right aui-btn">-->
+			<!--<span class=""></span>-->
+		<!--</a>-->
+	<!--</header>-->
+	<!--<div class="height-one"></div>-->
+
+		<div class="aui-content add">
+			<ul class="aui-list aui-form-list">
+				<li class="aui-list-item">
+					<div class="aui-list-item-inner">
+						<div class="aui-list-item-input">
+							<input id="idCard" type="text" placeholder="请输入您要修改的真实身份证号">
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<!--<div class="aui-content shangchuang">-->
+		<!--<form  name="form" id="formSave1" action="" method="POST" enctype="multipart/form-data">-->
+			<!--<div class="shangchuang-one">-->
+				<!--<div class="shangchuang-img">-->
+					<!--<div class="upload-btn"><input onchange="doUpload(1)" id="file1" accept="image/*" type="file" name="file" ></div>-->
+					<!--<div class="upload-img" id="preview_zm">-->
+						<!--<input type="hidden" id="url1">-->
+						<!--<img id="imghead1" class="shang-img" src="../image/shangchuang.png"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<span>点击上传身份证正面照</span>-->
+			<!--</div>-->
+	<!--</form>-->
+	<!--<form  name="form" id="formSave2" action="" method="POST" enctype="multipart/form-data">-->
+			<!--<div class="shangchuang-one aui-margin-t-15">-->
+				<!--<div class="shangchuang-img">-->
+					<!--<div class="upload-btn"><input onchange="doUpload(2)" id="file2" type="file" name="file"></div>-->
+					<!--<div class="upload-img" id="preview_fm">-->
+						<!--<input type="hidden" id="url2">-->
+						<!--<img id="imghead2" class="shang-img" src="../image/shangchuang.png"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<span>点击上传身份证反面照</span>-->
+			<!--</div>-->
+	<!--</form>-->
+		<!--</div>-->
+		<div class="aui-content add-but">
+			<div class="aui-btn aui-btn-block" onclick="save()">保存</div>
+		</div>
+
+	</body>
+</html>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        layui.use(['qyWin','qyForm','qyShop'], initpage);
+		var idCard;
+        function initpage(){
+
+        }
+        function save() {
+            idCard = $("#idCard").val();
+			if(idCard == ""){
+				layui.qyWin.toast("请输入您的身份证号");
+			}
+			layui.qyForm.qyajax("/f/app/userinfo/updateIdCard",{idCard:idCard},function (data) {
+				layui.qyWin.toast("恭喜,修改身份证号码成功");
+				setTimeout("layui.qyWin.win(\"\",'wanshanziliao.html',{});",1500)
+
+            })
+
+        }
+
+//		function doUpload(id) {
+//			var formData = new FormData($( "#formSave"+id )[0]);
+//            if(!$('#file'+id).val()){
+//                return;
+//			};
+//			$.ajax({
+//				url: CONS_AJAX_URL+'/f/app/userinfo/upload',
+//				type: 'POST',
+//				data: formData,
+//				async: false,
+//				cache: false,
+//				contentType: false,
+//				processData: false,
+//				success: function (data) {
+//				    $("#imghead"+id).attr("src",CONS_AJAX_URL+data.path);
+//					$("#url"+id).val(data.path);
+//				},
+//				error: function (data) {
+//					alert("上传图片失败");
+//				}
+//			});
+//
+//		}
+	</script>
+</html>

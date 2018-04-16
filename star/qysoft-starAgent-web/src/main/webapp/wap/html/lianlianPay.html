@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>我的分享</title>
+	<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+	<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+	<script type="text/javascript" src="../css/script/jquery.min.js"></script>
+	<script type="text/javascript" src="../css/script/jquery.qrcode.min.js"></script>
+</head>
+<body class="bg-gray">
+<!--<header class="aui-bar aui-bar-nav home">-->
+<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+<!--<span class="aui-iconfont aui-icon-left"></span>-->
+<!--</a>-->
+<!--<div class="aui-title">-->
+<!--<span>分享二维码</span>-->
+<!--</div>-->
+<!--</header>-->
+<!--<div class="height-one"></div>-->
+<style type="text/css">
+	.erweima{position: absolute;top:2.25rem;bottom:5rem;left:0;right:0;display:flex;display:-webkit-flex;justify-content: center;-webkit-justify-content: center;align-items: center;-webkit-align-items: center;}
+	.erweima>div{width:100%;}
+	.erweima>div div{margin:0 auto;width:60%;}
+	.erweima>div p{text-align: center;font-size:0.65rem;margin:10px 0;}
+	#code{padding-bottom:0.75rem;margin-top:1rem;}
+	#code *{margin:0 auto;}
+	.erweima>div img{display: block;margin:0 auto;}
+</style>
+<div class="aui-content erweima">
+	<div>
+		<p>打开支付宝扫一扫</p>
+		<div id="code" >
+		</div>
+		<img id="imgCode"  />
+	</div>
+
+</div>
+
+</body>
+<script type="text/javascript">
+    qySoftInit("../../static/qyScript/web/");
+
+
+    //apicloud 准备完成
+
+    layui.use(['qyWin','qyForm'], initpage);
+
+
+    function initpage(){
+        var qyWin  = layui.qyWin;
+       	var url=layui.qyForm.GetQueryString("url");
+        loadData(url);
+
+    }
+
+    function loadData(url){
+
+            var qrcodeOne = $("#code").qrcode({
+                width: 200, //宽度
+                height:200, //高度
+                text: url
+            }).hide();
+            var canvas = qrcodeOne.find('canvas').get(0);
+            $('#imgCode').attr('src',canvas.toDataURL('image/jpg'))
+
+
+
+    }
+</script>
+</html>

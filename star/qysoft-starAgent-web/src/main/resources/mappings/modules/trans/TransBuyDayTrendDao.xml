@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.trans.dao.TransBuyDayTrendDao">
+    
+	<sql id="transBuyDayTrendColumns">
+		a.id AS "id",
+		a.group_id AS "groupId",
+		a.now_money AS "nowMoney",
+		a.start_money AS "startMoney",
+		a.end_money AS "endMoney",
+		a.hig_money AS "higMoney",
+		a.low_money AS "lowMoney",
+		a.amount AS "amount",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.add_date AS "addDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		u.name AS "name"
+	</sql>
+
+	<sql id="transBuyDayTrendJoins">
+		LEFT JOIN trans_goods_group u ON u.id = a.group_id
+	</sql>
+    
+	<select id="get" resultType="TransBuyDayTrend">
+		SELECT 
+			<include refid="transBuyDayTrendColumns"/>
+		FROM trans_buy_day_trend a
+		<include refid="transBuyDayTrendJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+
+
+	<select id="findList" resultType="TransBuyDayTrend">
+		SELECT 
+
+			<include refid="transBuyDayTrendColumns"/>
+		FROM trans_buy_day_trend a
+		<include refid="transBuyDayTrendJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="name != null and name != ''">
+				AND u.name = #{name}
+			</if>
+			<if test="createDateBegin != null and createDateBegin != ''">
+				AND DATE_FORMAT(a.add_date, '%Y-%m-%d') &gt;=  DATE_FORMAT(#{createDateBegin}, '%Y-%m-%d')
+			</if>
+			<if test="createDateEnd != null and createDateEnd != ''">
+				AND DATE_FORMAT(a.add_date, '%Y-%m-%d') &lt;=   DATE_FORMAT(#{createDateEnd}, '%Y-%m-%d')
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND DATE_FORMAT(a.create_date, '%Y-%m-%d') =   DATE_FORMAT(#{createDate}, '%Y-%m-%d')
+			</if>
+			<if test="addDate != null and addDate != ''">
+				AND DATE_FORMAT(a.add_date, '%Y-%m-%d') =   DATE_FORMAT(#{addDate}, '%Y-%m-%d')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<when test="orderBy !=null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+		<if test="topLimit != null and topLimit != '' ">
+			limit 0,#{topLimit}
+		</if>
+	</select>
+
+	
+	<insert id="insert">
+		INSERT INTO trans_buy_day_trend(
+			id,
+			group_id,
+			now_money,
+			start_money,
+			end_money,
+			hig_money,
+			low_money,
+			amount,
+			create_by,
+			create_date,
+			add_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{groupId},
+			#{nowMoney},
+			#{startMoney},
+			#{endMoney},
+			#{higMoney},
+			#{lowMoney},
+			#{amount},
+			#{createBy.id},
+			#{createDate},
+			#{addDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE trans_buy_day_trend SET
+			now_money = #{nowMoney},
+			start_money= #{startMoney},
+			end_money= #{endMoney},
+			hig_money= #{higMoney},
+			low_money= #{lowMoney},
+			amount= #{amount},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		delete  from  trans_buy_day_trend
+		WHERE id = #{id}
+	</update>
+
+	<select id="getChartDatasBuyGroup" resultType="TransBuyDayTrend">
+		SELECT
+			<include refid="transBuyDayTrendColumns"/>
+		FROM trans_buy_day_trend a
+			<include refid="transBuyDayTrendJoins"/>
+		WHERE  a.group_id = #{groupId} AND a.del_flag = "0"
+		 order by a.create_date asc
+
+	</select>
+</mapper>

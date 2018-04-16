@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Class-Path: logback-classic-1.1.11.jar jandex-2.0.0.Final.jar spring-b
+ oot-starter-aop-1.5.7.RELEASE.jar hibernate-commons-annotations-5.0.1
+ .Final.jar spring-boot-1.5.7.RELEASE.jar tomcat-juli-8.5.20.jar sprin
+ g-tx-4.3.11.RELEASE.jar jul-to-slf4j-1.7.25.jar spring-boot-starter-1
+ .5.7.RELEASE.jar log4j-over-slf4j-1.7.25.jar tomcat-jdbc-8.5.20.jar j
+ boss-logging-3.3.1.Final.jar javax.transaction-api-1.2.jar spring-cor
+ e-4.3.11.RELEASE.jar spring-aop-4.3.11.RELEASE.jar spring-orm-4.3.11.
+ RELEASE.jar spring-data-jpa-1.11.7.RELEASE.jar hibernate-core-5.0.12.
+ Final.jar antlr-2.7.7.jar javassist-3.21.0-GA.jar spring-context-4.3.
+ 11.RELEASE.jar jcl-over-slf4j-1.7.25.jar snakeyaml-1.17.jar spring-jd
+ bc-4.3.11.RELEASE.jar spring-boot-starter-logging-1.5.7.RELEASE.jar s
+ pring-boot-autoconfigure-1.5.7.RELEASE.jar aspectjweaver-1.8.10.jar h
+ ibernate-entitymanager-5.0.12.Final.jar spring-boot-starter-data-jpa-
+ 1.5.7.RELEASE.jar hibernate-jpa-2.1-api-1.0.0.Final.jar spring-beans-
+ 4.3.11.RELEASE.jar spring-boot-starter-jdbc-1.5.7.RELEASE.jar dom4j-1
+ .6.1.jar spring-data-commons-1.13.7.RELEASE.jar logback-core-1.1.11.j
+ ar spring-expression-4.3.11.RELEASE.jar slf4j-api-1.7.25.jar spring-a
+ spects-4.3.11.RELEASE.jar
+Main-Class: main.Main
+

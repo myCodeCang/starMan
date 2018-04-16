@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>修改登录密码</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>修改登录密码</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content revise">
+		    <ul class="aui-list aui-form-list">
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="password" placeholder="请输入原密码" id="oldPwd">
+		                </div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="password" placeholder="请输入新密码" id="newPwd">
+		                </div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="password" placeholder="请再次输入新密码" id="newPwds">
+		                </div>
+		            </div>
+		        </li>
+		    </ul>
+		</div>    
+		<div class="aui-content revise-but" onclick="save();">
+			<div class="aui-btn aui-btn-block">保 存</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        layui.use(['qyWin','qyForm','qyShop'], initpage);
+        function initpage(){
+
+        }
+        function save(){
+
+            var oldPwd = $("#oldPwd").val();
+            var newPwd = $("#newPwd").val();
+            var newPwds = $("#newPwds").val();
+
+            if(!oldPwd){
+                layui.qyWin.toast("请输入原始密码!");
+                return ;
+            }
+            if(!newPwd){
+                layui.qyWin.toast("请输入新密码!");
+                return ;
+            }
+            if(newPwd != newPwds){
+                layui.qyWin.toast("请两次新密码保持一致!");
+                return ;
+            }
+            var data = {
+                oldPwd : oldPwd,
+                newPwd : newPwd
+            }
+
+
+            layui.qyForm.qyajax("/f/app/userinfo/updatePassword",data,function(res){
+                layui.qyWin.toast(res.info);
+                setTimeout("layui.qyWin.win('my','my.html',{})",1000);
+            });
+        }
+
+	</script>
+</html>

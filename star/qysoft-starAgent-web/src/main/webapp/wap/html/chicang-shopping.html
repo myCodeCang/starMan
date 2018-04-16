@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>持仓商城</title>
+		<link rel="stylesheet" type="text/css" href="../../static/qyScript/web/layer/css/layui.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>持仓商城</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn" onclick="zhuanrangLog()">-->
+		        <!--<span class="ico-duihuan"></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content chicang-detail">
+			<div class="aui-grid">
+				<div class="aui-row" id="temp-star">
+
+				</div>
+			</div>
+		</div>
+		<div class="aui-content jilu">
+			<a onclick="zhuanrangLog()">转让记录</a>
+		</div>
+
+	</body>
+
+	<script id="tpl-star" type="text/html">
+		{{if page.count == 0}}
+		<img src="../image/wu.png" style="display: block;margin:0 auto;margin-top:90px;width:45%;">
+		{{/if}}
+		{{each page.list}}
+		<a href="jiaoyi.html?groupId={{$value.id}}">
+		<div class="aui-col-xs-6" style="color: black">
+
+			<div style="position:relative;">
+				{{if $value.status != 2}}
+				<img src="../image/weikaishi.png" style="position: absolute;top:0;left:0;z-index:1;width:50%;">
+				{{/if}}
+				<img src={{$value.thumb}}>
+			</div>
+
+			<!--<img src="../image/meinv.png"/>-->
+			<!--<span class="aui-ellipsis-1 chicang-name">{{$value.starProductName}}</span>-->
+			<!--<span id="needTime">{{$value.starTime+"秒"}}</span>-->
+			</div>
+		</a>
+
+		{{/each}}
+	</script>
+
+	<script type="text/javascript">
+
+
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+
+        //apicloud 准备完成
+        layui.use(['qyWin', 'qyForm', 'template', 'layer'], initpage);
+
+
+        //初始化页面
+        function initpage() {
+            var qyWin = layui.qyWin;
+            var qyForm = layui.qyForm;
+            qyForm.pageajax(loadData,{
+                "pageNo":"0",
+                "pageSize":"10"
+            },"temp-star");
+
+        }
+		function loadData(param,callback) {
+            layui.qyForm.qyajax("/f/star/attorn/getStarOutTime",{},function(data){
+                var pageData = data.page;
+                var html = template('tpl-star', data);
+                $("#temp-star").append(html);
+
+                //分页回调结束处理方法, 传入的参数必须正确
+                if(callback){
+                    callback(pageData);
+                }
+            });
+        }
+        function zhuanrangLog() {
+			layui.qyWin.win("attornlog","attornlog.html",{});
+        }
+
+	</script>
+</html>

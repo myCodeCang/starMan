@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>个人简介</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>个人简介</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class="sangedian"></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content brief">
+			<div class="aui-card-list-content">
+	            <ul class="aui-list aui-media-list">
+	                <li class="aui-list-item aui-list-item-middle">
+	                    <div class="aui-media-list-item-inner">
+	                        <div class="aui-list-item-media" id="avatar">
+
+	                        </div>
+	                        <div class="aui-list-item-inner">
+								<span class="aui-margin-b-5" id="name"></span>
+	                            <span>
+									<span  class="aui-pull-left" id="jianjie"></span>
+									<div class="aui-btn aui-pull-right">
+									<a href="" style="color:#fff;" id="goQiugou">求购时间</a>
+									</div>
+								</span>
+	                        </div>
+	                    </div>
+	                </li>
+	            </ul>
+			</div>
+		</div>
+		<div class="mask"></div>
+
+		<!----------------------个人简介----------------------->
+		<div class="aui-content geren-jianjie" id="xiangqing">
+
+		</div>
+	</body>
+	<script src="../script/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+            //框架初始化
+            qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        layui.use(['qyWin','qyForm','template'], initpage);
+        function initpage(){
+            var id = layui.qyForm.GetQueryString("id");
+            getStarbaseInfo(id);
+        }
+        //获取明星基本信息
+		function getStarbaseInfo(id){
+            layui.qyForm.qyajax("/f/app/married/getStarBaseInfo",{'id':id},function(data){
+                $("#name").html(data.baseInfo.name+'('+data.baseInfo.id+ ')');
+                $("#goQiugou").attr("href","qiugou.html?id="+data.baseInfo.id);
+                $("#jianjie").html(data.baseInfo.description);
+                $("#xiangqing").html(data.baseInfo.detail);
+                $("#avatar").html('<img src="'+data.baseInfo.thumb+'">');
+            });
+		}
+		function goumaiShow(){
+			$('#shangp-down').animate({'bottom':'0'});
+			$('.mask').show();
+		}
+		function goumaiHide(){
+			$('#shangp-down').animate({'bottom':'-800px'});
+			$('.mask').hide();
+		}
+	</script>
+</html>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.trans.dao.TransOrderDao">
+
+	<sql id="transOrderColumnsUpdate">
+		a.id AS "id",
+		a.user_name AS "userName",
+		a.group_id AS "groupId",
+		a.goods_name AS "goodsName",
+		a.address AS "address",
+		a.mobile AS "mobile",
+		a.consignee AS "consignee",
+		a.post_code AS "postCode",
+		a.type AS "type",
+		a.num AS "num",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.def_lag AS "defLag"
+	</sql>
+
+	<sql id="transOrderColumns">
+		a.id AS "id",
+		a.user_name AS "userName",
+		a.group_id AS "groupId",
+		a.goods_name AS "goodsName",
+		a.address AS "address",
+		a.mobile AS "mobile",
+		a.consignee AS "consignee",
+		a.post_code AS "postCode",
+		a.type AS "type",
+		a.num AS "num",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.def_lag AS "defLag"
+	</sql>
+	
+	<sql id="transOrderJoins">
+	</sql>
+    
+	<select id="get" resultType="TransOrder">
+		SELECT 
+			<include refid="transOrderColumns"/>
+		FROM trans_order a
+		<include refid="transOrderJoins"/>
+		WHERE a.id = #{id}
+		for update
+	</select>
+
+
+	<select id="findListLock" resultType="TransOrder">
+		SELECT
+		<include refid="transOrderColumns"/>
+		FROM trans_order a
+		<where>
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile = #{mobile}
+			</if>
+			<if test="consignee != null and consignee != ''">
+				AND a.consignee = #{consignee}
+			</if>
+			<if test="addTimeBegin != null and addTimeBegin != ''">
+				AND a.create_date > #{addTimeBegin}
+			</if>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findList" resultType="TransOrder">
+		SELECT
+			<include refid="transOrderColumns"/>
+		FROM trans_order a
+		<include refid="transOrderJoins"/>
+		<where>
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND a.mobile = #{mobile}
+			</if>
+			<if test="consignee != null and consignee != ''">
+				AND a.consignee = #{consignee}
+			</if>
+			<if test="addTimeBegin != null and addTimeBegin != ''">
+				AND a.create_date > #{addTimeBegin}
+			</if>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<update id="updateType">
+		UPDATE trans_order SET
+			type = #{type}
+		WHERE id = #{id}
+	</update>
+	<insert id="insert">
+		INSERT INTO trans_order(
+			id,
+			user_name,
+			group_id,
+			goods_name,
+			address,
+			mobile,
+			consignee,
+			post_code,
+			num,
+			type,
+			create_date,
+			update_date,
+			remarks
+
+		) VALUES (
+			#{id},
+			#{userName},
+			#{groupId},
+			#{goodsName},
+			#{address},
+			#{mobile},
+			#{consignee},
+			#{postCode},
+			#{num},
+			#{type},
+			#{createDate},
+			#{updateDate},
+			#{remarks}
+		)
+	</insert>
+</mapper>

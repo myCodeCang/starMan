@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>修改密码</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>修改密码</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class="sangedian"></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content revise">
+		    <ul class="aui-list aui-form-list">
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="请输入您的手机号" id="mobile">
+		                </div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="请输入您的验证码" id="code">
+							<div class="aui-btn" id="getVerifyCode">获取验证码</div>
+		                </div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="password" placeholder="请输入修改密码" id="newPwd">
+		                </div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-input">
+		                    <input type="password" placeholder="请再次输入修改密码" id="newPwds">
+		                </div>
+		            </div>
+		        </li>
+		    </ul>
+		</div>    
+		<div class="aui-content revise-but">
+			<div class="aui-btn aui-btn-block" onclick="save()">保存</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        var nums = 60;
+        var clock = '';
+        layui.use(['qyWin','qyForm','qyShop'], initpage);
+        function initpage(){
+            $('#getVerifyCode').on('click', function () {
+                getVerify();
+            });
+        }
+        function getVerify() {
+            if ($("#mobile").val() == '' || $("#mobile").val() == 'undefined') {
+                layui.qyWin.toast("请填写手机号码!");
+                return;
+            }
+
+            var param = {
+                mobile: $("#mobile").val(),
+                isMobile: 1
+            };
+
+            $('#getVerifyCode').off('click');
+            layui.qyForm.qyajax("/msm/lkMsm/sendVerifyCode", param, function (data) {
+                $("#getVerifyCode").attr("disabled", true);
+                $("#getVerifyCode").text(nums + '秒后可重新获取');
+                $("#codeDiv").removeClass('yanred');
+                //一秒执行一次
+                clock = setInterval(doLoop, 1000);
+            });
+        }
+
+        function doLoop() {
+            nums--;
+            if (nums > 0) {
+                $("#getVerifyCode").attr("disabled", true);
+                $("#getVerifyCode").text(nums + '秒后可重新获取');
+            } else {
+                clearInterval(clock);
+                //清除js定时器
+                $("#getVerifyCode").removeAttr("disabled");
+                $("#getVerifyCode").text('获取验证码');
+                $("#codeDiv").addClass('yanred');
+                nums = 60;
+                //重置时间
+
+                $('#getVerifyCode').on('click', function () {
+                    getVerify();
+                });
+            }
+        }
+
+        function save() {
+            var newPwd = $("#newPwd").val();
+            var newPwds = $("#newPwds").val();
+            var mobile = $("#mobile").val();
+            var code = $("#code").val();
+            if (!newPwd) {
+                layui.qyWin.toast("请输新密码!");
+                return;
+            }
+            if (newPwd != newPwds) {
+                layui.qyWin.toast("请两次新密码保持一致!");
+                return;
+            }
+            var data = {
+                newPwd: newPwd,
+                newPwds: newPwds,
+                mobile: mobile,
+                code: code
+            }
+
+            layui.qyForm.qyajax("/f/webUser/userInfo/forgetPassword", data, function (res) {
+                layui.qyWin.toast(res.info);
+                setTimeout("layui.qyWin.back(true)", 1500);
+            });
+        }
+	</script>
+</html>

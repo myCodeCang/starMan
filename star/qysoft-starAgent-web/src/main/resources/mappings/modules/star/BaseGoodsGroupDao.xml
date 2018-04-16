@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.star.dao.BaseGoodsGroupDao">
+    
+	<sql id="baseGoodsGroupColumns">
+		a.id AS "id",
+		a.category_id AS "categoryId",
+		a.name AS "name",
+		a.description AS "description",
+		a.detail AS "detail",
+		a.num AS "num",
+		a.thumb AS "thumb",
+		a.image AS "image",
+		a.pro_img AS "proImg",
+		a.money AS "money",
+		a.is_show AS "isShow",
+		a.status AS "status",
+		a.trans_start_time AS "transStartTime",
+		a.star_product_name AS "starProductName",
+		a.star_product_detail AS "starProductDetail",
+		a.star_time AS "starTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.trans_rules AS "transRules",
+		b.classifyName AS "classifyname"
+	</sql>
+	
+	<sql id="baseGoodsGroupJoins">
+		LEFT JOIN shop_classify b ON b.id = a.category_id
+	</sql>
+    
+	<select id="get" resultType="BaseGoodsGroup">
+		SELECT 
+			<include refid="baseGoodsGroupColumns"/>
+		FROM base_goods_group a
+		<include refid="baseGoodsGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BaseGoodsGroup">
+		SELECT
+			<include refid="baseGoodsGroupColumns"/>
+		FROM base_goods_group a
+		<include refid="baseGoodsGroupJoins"/>
+		<where>
+			a.status >= 0
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="description != null and description != ''">
+				AND a.description = #{description}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="attornFind != null and attornFind != ''">
+				AND a.status > 0
+			</if>
+			<if test="isShow != null and isShow != ''">
+				AND a.is_show = #{isShow}
+			</if>
+			<if test="categoryId != null and categoryId != ''">
+				AND a.category_id = #{categoryId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findTradeList" resultType="BaseGoodsGroup">
+		SELECT
+		a.id AS "id",
+		a.category_id AS "categoryId",
+		a.name AS "name",
+		a.description AS "description",
+		a.detail AS "detail",
+		a.num AS "num",
+		a.thumb AS "thumb",
+		a.image AS "image",
+		a.pro_img AS "proImg",
+		a.money AS "money",
+		a.is_show AS "isShow",
+		a.status AS "status",
+		a.trans_start_time AS "transStartTime",
+		a.star_product_name AS "starProductName",
+		a.star_product_detail AS "starProductDetail",
+		a.star_time AS "starTime",
+		a.trans_rules AS "transRules",
+		m.transaction_price AS "mdTradeMain.transactionPrice",
+		m.opening_price AS "mdTradeMain.openingPrice",
+		m.closing_price AS "mdTradeMain.closingPrice",
+		m.highest_price AS "mdTradeMain.highestPrice",
+		m.lowest_price AS "mdTradeMain.lowestPrice",
+		m.amount AS "mdTradeMain.amount"
+		FROM base_goods_group a
+		LEFT JOIN md_trade_main m ON a.id = m.group_id
+		<where>
+			a.status > 0
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="isShow != null and isShow != ''">
+				AND a.is_show = #{isShow}
+			</if>
+				AND DATE_FORMAT(m.create_date, '%Y-%m-%d') =   DATE_FORMAT(#{mdTradeMain.createDate}, '%Y-%m-%d')
+			<if test="categoryId != null and categoryId != ''">
+				AND a.category_id = #{categoryId}
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+		</where>
+		ORDER BY a.update_date DESC
+	</select>
+	
+	<select id="findAllList" resultType="BaseGoodsGroup">
+		SELECT 
+			<include refid="baseGoodsGroupColumns"/>
+		FROM base_goods_group a
+		<include refid="baseGoodsGroupJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO base_goods_group(
+			id,
+			category_id,
+			name,
+			description,
+			detail,
+			num,
+			thumb,
+			image,
+			pro_img,
+			money,
+			is_show,
+			status,
+			star_product_name,
+			star_product_detail,
+			star_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			trans_rules
+		) VALUES (
+			#{id},
+			#{categoryId},
+			#{name},
+			#{description},
+			#{detail},
+			#{num},
+			#{thumb},
+			#{image},
+			#{proImg},
+			#{money},
+			#{isShow},
+			#{status},
+			#{starProductName},
+			#{starProductDetail},
+			#{starTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{transRules}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE base_goods_group SET 	
+			category_id = #{categoryId},
+			name = #{name},
+			description = #{description},
+			detail = #{detail},
+			num = #{num},
+			thumb = #{thumb},
+			image = #{image},
+			pro_img = #{proImg},
+			money = #{money},
+			is_show = #{isShow},
+			status = #{status},
+			star_product_name = #{starProductName},
+			star_product_detail = #{starProductDetail},
+			star_time = #{starTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			trans_rules = #{transRules}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateStatusTime">
+		UPDATE  base_goods_group SET
+		status = #{status},
+		trans_start_time = #{transStartTime}
+		WHERE id = #{id}
+	</update>
+	<update id="updateBaseMoney">
+		UPDATE  base_goods_group SET
+		money = #{money}
+		WHERE id = #{id}
+	</update>
+	<update id="updateBaseNum">
+		UPDATE  base_goods_group SET
+		num = #{num}
+		WHERE id = #{id}
+	</update>
+	<update id="delete">
+		delete from base_goods_group
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

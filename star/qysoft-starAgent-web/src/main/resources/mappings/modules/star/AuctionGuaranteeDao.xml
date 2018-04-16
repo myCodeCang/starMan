@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.star.dao.AuctionGuaranteeDao">
+    
+	<sql id="auctionGuaranteeColumns">
+		a.id AS "id",
+		a.auction_id AS "auctionId",
+		a.user_name AS "userName",
+		a.money AS "money",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="auctionGuaranteeJoins">
+	</sql>
+    
+	<select id="get" resultType="AuctionGuarantee">
+		SELECT 
+			<include refid="auctionGuaranteeColumns"/>
+		FROM auction_guarantee a
+		<include refid="auctionGuaranteeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	<select id="findByNameId" resultType="AuctionGuarantee">
+		SELECT
+		<include refid="auctionGuaranteeColumns"/>
+		FROM auction_guarantee a
+		<include refid="auctionGuaranteeJoins"/>
+		WHERE a.auction_id = #{auctionId}
+			AND  a.user_name = #{userName}
+		LIMIT 1
+	</select>
+
+	<select id="findList" resultType="AuctionGuarantee">
+		SELECT 
+
+			<include refid="auctionGuaranteeColumns"/>
+		FROM auction_guarantee a
+		<include refid="auctionGuaranteeJoins"/>
+		<where>
+			<if test="userName != null and userName != ''">
+				AND a.user_name = #{userName}
+			</if>
+			<if test="auctionId != null and auctionId != ''">
+				AND a.auction_id = #{auctionId}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findByAuctionId" resultType="AuctionGuarantee">
+		SELECT
+		<include refid="auctionGuaranteeColumns"/>
+		FROM auction_guarantee a
+		<include refid="auctionGuaranteeJoins"/>
+		WHERE a.auction_id = #{auctionId}
+	</select>
+	<select id="findAllList" resultType="AuctionGuarantee">
+		SELECT 
+			<include refid="auctionGuaranteeColumns"/>
+		FROM auction_guarantee a
+		<include refid="auctionGuaranteeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO auction_guarantee(
+			id,
+			auction_id,
+			user_name,
+			money,
+			status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{auctionId},
+			#{userName},
+			#{money},
+			#{status},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE auction_guarantee SET 	
+			auction_id = #{auctionId},
+			user_name = #{userName},
+			money = #{money},
+			status = #{status},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			create_date = #{createDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateStatus">
+		UPDATE auction_guarantee SET
+		status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		delete FROM auction_guarantee
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

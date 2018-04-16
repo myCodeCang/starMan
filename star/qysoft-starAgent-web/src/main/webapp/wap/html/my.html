@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>个人中心</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>个人中心</span>-->
+		    <!--</div>-->
+		    <!--<a id="fenxiang" style="display: none" class="aui-pull-right aui-btn" href="fenxiang.html">-->
+				<!--<span class="" style="background:url(../image/erweima.png);background-repeat: no-repeat;background-size:contain;"></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one" style="background:#393a3e;"></div>-->
+		<div class="aui-content my">
+	        <div class="aui-card-list-content">
+	            <ul class="aui-list aui-media-list">
+	                <li class="aui-list-item aui-list-item-middle">
+	                    <div class="aui-media-list-item-inner">
+	                        <div class="aui-list-item-media" id="user_avatar">
+	                        	<!--完善信息之后加V-->
+
+	                        </div>
+	                        <div class="aui-list-item-inner">
+	                            <div class="aui-list-item-text">
+	                                <div class="aui-list-item-title" id="nickName"></div>
+	                                <div class="aui-list-item-right">已购<span id="starNum"></span>人时间</div>
+	                            </div>
+								<div class="aui-list-item-text">
+									<div class="aui-list-item-title">号段:<span id="userNum"></span></div>
+								</div>
+	                            <div class="aui-list-item-text">
+	                                <div class="aui-list-item-title">总额:<span id="money"></span></div>
+	                                <div class="aui-list-item-right">时间价值:<span id="timeValue"></span></div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </li>
+	            </ul>
+	        </div>    
+		</div>
+		<div class="aui-content my-list">
+		    <ul class="aui-list aui-list-in">
+		    	<a href="my-qianbao.html">
+			        <li class="aui-list-item">
+			            <div class="aui-list-item-label-icon">
+			                <i class="pic-qianbao"></i>
+			            </div>
+			            <div class="aui-list-item-inner aui-list-item-arrow">
+			                <div class="aui-list-item-title">我的钱包</div>
+			            </div>
+			        </li>
+		    	</a>
+		    	<a href="wanghong.html?title=交易记录">
+			        <li class="aui-list-item">
+			            <div class="aui-list-item-label-icon">
+			                <i class="pic-jiaoyi"></i>
+			            </div>
+			            <div class="aui-list-item-inner aui-list-item-arrow">
+			                <div class="aui-list-item-title">交易记录</div>
+			            </div>
+			        </li>
+		       </a>
+				<a href="duihuanlishi.html">
+					<li class="aui-list-item">
+						<div class="aui-list-item-label-icon">
+							<i class="pic-jiaoyi"></i>
+						</div>
+						<div class="aui-list-item-inner aui-list-item-arrow">
+							<div class="aui-list-item-title">兑换记录</div>
+						</div>
+					</li>
+				</a>
+				<a href="attornlog.html">
+					<li class="aui-list-item">
+						<div class="aui-list-item-label-icon">
+							<i class="pic-jiaoyi"></i>
+						</div>
+						<div class="aui-list-item-inner aui-list-item-arrow">
+							<div class="aui-list-item-title">转让记录</div>
+						</div>
+					</li>
+				</a>
+		        <a href="my-shijian.html">
+			        <li class="aui-list-item">
+			            <div class="aui-list-item-label-icon">
+			                <i class="pic-shijian"></i>
+			            </div>
+			            <div class="aui-list-item-inner aui-list-item-arrow">
+			                <div class="aui-list-item-title">我的时间</div>
+			            </div>
+			        </li>
+		        </a>
+				<div id="fenxiang" style="display: none">
+				<a href="fenxiang.html">
+					<li class="aui-list-item">
+						<div class="aui-list-item-label-icon">
+							<i class="ico-fengxiang"></i>
+						</div>
+						<div class="aui-list-item-inner aui-list-item-arrow">
+							<div class="aui-list-item-title">我的分享</div>
+						</div>
+					</li>
+				</a>
+				</div>
+				<div id="agent" style="display: none">
+				<a href="agentfenxiang.html" >
+					<li class="aui-list-item">
+						<div class="aui-list-item-label-icon">
+							<i class="ico-fengxiang"></i>
+						</div>
+						<div class="aui-list-item-inner aui-list-item-arrow">
+							<div class="aui-list-item-title">经纪人分享</div>
+						</div>
+					</li>
+				</a></div>
+		        <a href="wanshanziliao.html">
+			        <li class="aui-list-item">
+			            <div class="aui-list-item-label-icon">
+			                <i class="pic-ziliao"></i>
+			            </div>
+			            <div class="aui-list-item-inner aui-list-item-arrow">
+			                <div class="aui-list-item-title">完善资料</div>
+			            </div>
+			        </li>
+		        </a>
+				<a href="login-pass.html">
+					<li class="aui-list-item">
+						<div class="aui-list-item-label-icon">
+							<i class="xiugai-pwd"></i>
+						</div>
+						<div class="aui-list-item-inner aui-list-item-arrow">
+							<div class="aui-list-item-title">修改登录密码</div>
+						</div>
+					</li>
+				</a>
+				<a href="pay-pass.html">
+					<li class="aui-list-item">
+						<div class="aui-list-item-label-icon">
+							<i class="xiugai-paypwd"></i>
+						</div>
+						<div class="aui-list-item-inner aui-list-item-arrow">
+							<div class="aui-list-item-title">修改支付密码</div>
+						</div>
+					</li>
+				</a>
+		        <a href="jifenguanli.html">
+			        <li class="aui-list-item">
+			            <div class="aui-list-item-label-icon">
+			                <i class="pic-jifen"></i>
+			            </div>
+			            <div class="aui-list-item-inner aui-list-item-arrow">
+			                <div class="aui-list-item-title">积分管理</div>
+			            </div>
+			        </li>
+		        </a>
+		        <a href="problem.html">
+			        <li class="aui-list-item">
+			            <div class="aui-list-item-label-icon">
+			                <i class="pic-changjian"></i>
+			            </div>
+			            <div class="aui-list-item-inner aui-list-item-arrow">
+			                <div class="aui-list-item-title">常见问题</div>
+			            </div>
+			        </li>
+		        </a>
+		        <a href="xinwengonggao.html">
+			        <li class="aui-list-item">
+			            <div class="aui-list-item-label-icon">
+			                <i class="pic-gonggao"></i>
+			            </div>
+			            <div class="aui-list-item-inner aui-list-item-arrow">
+			                <div class="aui-list-item-title">新闻公告</div>
+			            </div>
+			        </li>
+		        </a>
+					<li class="aui-list-item">
+						<div class="aui-list-item-label-icon">
+							<i class="ico-logout"></i>
+						</div>
+						<div class="aui-list-item-inner aui-list-item-arrow">
+							<div class="aui-list-item-title" onclick="loginOut()">退出登录</div>
+						</div>
+					</li>
+		    </ul>
+		</div>
+		<div class="blank_20"></div>
+		<div class="blank_20"></div>
+		<div class="blank_20"></div>
+		<div class="blank_20"></div>
+	</body>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        layui.use(['qyWin','qyForm','qyShop'], initpage);
+        function initpage(){
+            getUserinfo();
+            getUserAvatar();
+            getStarNum();
+            getTimeValue();
+        }
+        //获取用户基本信息
+        function  getUserinfo() {
+            layui.qyForm.qyajax("/f/app/userinfo/userinfo",{},function(data){
+
+				if(data.user.isShop == 1){
+                    $("#agent").show();
+				}
+                if(data.user.userType != 0){
+                    $("#fenxiang").show();
+                }
+				$("#nickName").html(data.user.userNicename);
+				$("#money").html(data.user.money.toFixed(2));
+                $("#userNum").html(data.user.shopId);
+                isBandcard();
+            });
+        }
+        //获得时间
+		function getTimeValue() {
+			layui.qyForm.qyajax("/f/star/attorn/getTimeValue",{},function (data) {
+			    $("#timeValue").html(data.num);
+            });
+        }
+		function getStarNum() {
+            layui.qyForm.qyajax("/f/star/attorn/getUserProducts",{},function(data){
+                $("#starNum").html(data.pages.count);
+            });
+        }
+
+        //获取用户默认头像
+        function  getUserAvatar() {
+            layui.qyForm.qyajax("/f/app/userinfo/getPhotoBykey",{keyword:"user_avatar"},function(data){
+                $("#user_avatar").html('<img src="'+CONS_IMG_URL+data.photoList[0].photo+'" class="aui-img-round aui-list-img-sm">');
+            });
+        }
+        //绑定银行卡后加V
+		function isBandcard(){
+            layui.qyForm.qyajax("/f/app/userinfo/userBankList",{},function(data){
+                if(data.userBankList.count != 0){
+                   $("#user_avatar").prepend('<img src="../image/v.png" class="my-v"/>');
+                }
+            });
+		}
+        function loginOut(){
+            layui.layer.open({
+                content: '您确定要退出吗？'
+                ,btn: ['确认', '取消']
+                ,yes: function(){
+                    layui.qyForm.qyajax("/f/logOut",{},function(){
+                        layui.qyWin.win("login","login.html",{});
+                    });
+                }
+            },function(){},{});
+
+        }
+
+	</script>
+</html>

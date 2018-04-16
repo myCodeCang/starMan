@@ -1,0 +1,423 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title id="headTitleOne"></title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<style type="text/css">
+			.table-box thead tr{border-bottom:1px solid #ddd;}
+		</style>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span id="headTitle"></span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one" style="background:#fff;"></div>-->
+		<div class="aui-content wanghong">
+			<a href="wanghong.html?categoryId=&title=全部"><i class="wang"></i></a>
+			<div class="aui-tab" id="tab">
+			    <div class="aui-tab-item" id="buyed" onclick="buyed()">已购</div> <!-- aui-active 选中样式-->
+			    <div class="aui-tab-item" id="detail" onclick="detail()">明细</div>
+			    <div class="aui-tab-item" id="order" onclick="order()">订单</div>
+			</div>
+		</div>
+		<div class="bg-gray" style="height:5px;"></div>
+		<!--------------market---------------->
+		<div id="market">
+
+		</div>
+		<div class="aui-content dangri-img" id="market-img" style="display: none;">
+
+		</div>
+		<!--------------已购---------------->
+		<!--没内容   thbody是隐藏的   thead存在-->
+		<div class="aui-content table-box" style="display: none;" id="tab-buyed">
+			<h3>已购时间总价值<span class="text-red aui-font-size-20" id="allMoney"></span>元</h3>
+		    <table>
+		        <thead>
+		            <tr>
+		            	<th>名称(代码)</th>
+			            <th>已购(时间)</th>
+			            <!--<th>成本均价(元/秒)</th>-->
+			            <th>现价(元)</th>
+		            </tr>
+		        </thead>
+		        <tbody id="temp-holdGoodsList">
+
+		        </tbody>
+		    </table>
+			<div class="aui-content dangri-img" id="buyed-img" style="display: none;">
+
+			</div>
+		</div>
+		<!--------------明细---------------->
+		<div class="aui-content wanghong-mingxi" style="display: none;" id="tab-detail">
+			<a href="dangrichengjiao.html"><h3 class="aui-margin-b-5">当日成交</h3></a>
+			<a href="lishichengjiao.html"><h3>历史成交</h3></a>
+		</div>
+
+		<!--------------订单---------------->
+		<!--没内容   thbody是隐藏的   thead存在-->
+			<div style="" id="tab_order">
+
+			</div>
+			<div class="aui-content dangri-img" id="order-img" style="display: none;">
+
+			</div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+	</body>
+	<script type="text/html" id="tpl-holdGoodsList">
+		{{each holdGoodsList}}
+			<tr>
+				<td>{{$value.name}}({{$value.groupId}})</td>
+				<td class="text-red">{{$value.num}}</td>
+				<!--<td class="text-red">{{$value.buyMoney}}</td>-->
+				<td class="text-red">{{$value.transactionPrice}}</td>
+			</tr>
+		{{/each}}
+	</script>
+	<script type="text/html" id="tpl-starList">
+		{{if starlist.length == 0}}
+		<img src="../image/wu.png" style="display: block;margin:0 auto;margin-top:90px;width:45%;">
+		{{/if}}
+		{{each starlist}}
+		<div class="aui-content market">
+		<div class="aui-grid">
+			<a href="geren-jianjie.html">
+				<div class="market-img">
+					<a href="geren-jianjie.html?id={{$value.id}}"><img src="{{$value.thumb}}"/></a>
+				</div>
+			</a>
+			<a href="hangqing-detail.html?id={{$value.id}}">
+				<div class="aui-row market-one">
+					<div class="aui-col-xs-4">
+						<span class="text-red">￥<span>{{$value.mdTradeMain.transactionPrice}}</span></span>
+					</div>
+					{{if $value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice<0}}
+					<div class="aui-col-xs-4">
+						<span class="text-green1st">
+							<span>{{($value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice) ,2 | numberFormat}}</span>
+							<img src="../image/down.png"/>
+						</span>
+					</div>
+					<div class="aui-col-xs-4">
+						<span class="text-green1st">{{($value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice)/$value.mdTradeMain.openingPrice | percentFormat}}</span>
+					</div>
+					{{/if}}
+					{{if $value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice>0}}
+					<div class="aui-col-xs-4">
+						<span class="text-red">
+							<span>{{$value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice,2 | numberFormat}}</span>
+							<img src="../image/top.png"/>
+						</span>
+					</div>
+					<div class="aui-col-xs-4">
+						<span class="text-red">{{($value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice)/$value.mdTradeMain.openingPrice | percentFormat}}</span>
+					</div>
+					{{/if}}
+					{{if $value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice==0}}
+					<div class="aui-col-xs-4">
+						<span><span>{{$value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice,2 | numberFormat}}</span></span>
+					</div>
+					<div class="aui-col-xs-4">
+						<span>{{($value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice)/$value.mdTradeMain.openingPrice | percentFormat}}</span>
+					</div>
+					{{/if}}
+				</div>
+				<div class="aui-row market-two">
+					<div class="aui-col-xs-3">
+						<span>最高</span>
+						<span>{{$value.mdTradeMain.highestPrice}}</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<span>最低</span>
+						<span>{{$value.mdTradeMain.lowestPrice}}</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<span>今开</span>
+						<span>{{$value.mdTradeMain.openingPrice}}</span>
+					</div>
+					<div class="aui-col-xs-3">
+						<span>转手</span>
+						<span>{{$value.sum/2/ $value.num | percentFormat}}</span>
+					</div>
+				</div>
+			</a>
+		</div>
+		<h3><span class="aui-pull-left">{{$value.name}}<span class="aui-font-size-12">({{$value.id}})</span></span><span class="aui-pull-right">
+				<img src="../image/pic-goumai.png"/>&nbsp;&nbsp;<a href="qiugou.html?id={{$value.id}}"><span style="color:#39c2f7;">求购时间</span></a></span></h3>
+		</div>
+		{{/each}}
+	</script>
+	<script type="text/html" id="tpl-colectionList">
+		{{if colectionList.length == 0}}
+		<img src="../image/wu.png" style="display: block;margin:0 auto;margin-top:90px;width:45%;">
+		{{/if}}
+		{{each colectionList}}
+		<div class="aui-content market">
+			<div class="aui-grid">
+				<a href="geren-jianjie.html">
+					<div class="market-img">
+						<a href="geren-jianjie.html?id={{$value.id}}"><img src="{{$value.thumb}}"/></a>
+					</div>
+				</a>
+				<a href="hangqing-detail.html?id={{$value.id}}">
+					<div class="aui-row market-one">
+						<div class="aui-col-xs-4">
+							<span class="text-red">￥<span>{{$value.mdTradeMain.transactionPrice}}</span></span>
+						</div>
+						{{if $value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice<0}}
+						<div class="aui-col-xs-4">
+							<span class="text-green1st">
+								<span>{{$value.mdTradeMain.transactionPrice- $value.mdTradeMain.openingPrice,2 | numberFormat}}</span>
+								<img src="../image/down.png"/>
+							</span>
+						</div>
+						<div class="aui-col-xs-4">
+							<span class="text-green1st">{{($value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice)/$value.mdTradeMain.openingPrice | percentFormat}}</span>
+						</div>
+						{{/if}}
+						{{if $value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice>0}}
+						<div class="aui-col-xs-4">
+							<span class="text-red">
+								<span>{{$value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice,2 | numberFormat}}</span>
+								<img src="../image/top.png"/>
+							</span>
+						</div>
+						<div class="aui-col-xs-4">
+							<span class="text-red">{{($value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice)/$value.mdTradeMain.openingPrice | percentFormat}}</span>
+						</div>
+						{{/if}}
+						{{if $value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice==0}}
+						<div class="aui-col-xs-4">
+							<span><span>{{$value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice,2 | numberFormat}}</span></span>
+						</div>
+						<div class="aui-col-xs-4">
+							<span>{{($value.mdTradeMain.transactionPrice-$value.mdTradeMain.openingPrice)/$value.mdTradeMain.openingPrice | percentFormat}}</span>
+						</div>
+						{{/if}}
+					</div>
+					<div class="aui-row market-two">
+						<div class="aui-col-xs-3">
+							<span>最高</span>
+							<span>{{$value.mdTradeMain.highestPrice}}</span>
+						</div>
+						<div class="aui-col-xs-3">
+							<span>最低</span>
+							<span>{{$value.mdTradeMain.lowestPrice}}</span>
+						</div>
+						<div class="aui-col-xs-3">
+							<span>今开</span>
+							<span>{{$value.mdTradeMain.openingPrice}}</span>
+						</div>
+						<div class="aui-col-xs-3">
+							<span>转手</span>
+							<span>{{$value.sum /2/ $value.num | percentFormat}}</span>
+						</div>
+					</div>
+				</a>
+
+			</div>
+			<h3><span class="aui-pull-left">{{$value.name}}<span class="aui-font-size-12">({{$value.id}})</span></span>
+				<span class="aui-pull-right" onclick="cancelColect({{$value.id}})" style="color:#39c2f7">取消自选</span>
+				<span class="aui-pull-right aui-margin-r-10">
+					<img src="../image/pic-goumai.png"/>&nbsp;&nbsp;
+					<a href="qiugou.html?id={{$value.id}}"><span style="color:#39c2f7;">求购时间</span>
+					</a>
+				</span>
+			</h3>
+		</div>
+		{{/each}}
+	</script>
+	<script type="text/html" id="tpl-orderList">
+		{{if orderList.count == 0}}
+		<img src="../image/wu.png" style="display: block;margin:0 auto;margin-top:90px;width:45%;">
+		{{/if}}
+		{{each orderList.list}}
+		<div class="aui-content meat">
+		<h3>
+			<span class="aui-pull-left">{{$value.name}}({{$value.groupId}})</span>
+			<span class="aui-pull-right">{{$value.type == '2'?"转让":"求购"}}</span></h3>
+		<div class="aui-grid">
+			<div class="aui-row">
+				<div class="aui-col-xs-6">
+					<span>发布价格：{{$value.price}}</span>
+					<span>{{$value.type == '2'?"转让数量":"求购数量"}}：{{$value.publishNum}}</span>
+				</div>
+				<div class="aui-col-xs-6">
+					<span>{{$value.createDate}}</span>
+					<span>剩余数量：{{$value.remainNum}}</span>
+					{{if $value.state==4}}
+					<div class="meat-but">
+						<div class="aui-pull-right aui-btn" onclick="killOrder({{$value.id}})">撤单</div>
+					</div>
+					{{/if}}
+					{{if $value.state==1}}
+					<div class="meat-but">
+						<div class="aui-pull-right aui-btn">撤单申请中...</div>
+					</div>
+					{{/if}}
+					{{if $value.state==2}}
+					<div class="meat-but">
+						<div class="aui-pull-right aui-btn">已下架</div>
+					</div>
+					{{/if}}
+					{{if $value.state==3}}
+					<div class="meat-but">
+						<div class="aui-pull-right aui-btn">成交</div>
+					</div>
+					{{/if}}
+					{{if $value.state==5}}
+					<div class="meat-but">
+						<div class="aui-pull-right aui-btn">撤单成功</div>
+					</div>
+					{{/if}}
+				</div>
+				</div>
+			</div>
+		</div>
+    {{/each}}
+</script>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+        //初始加载
+        function initpage(){
+            var categoryId = layui.qyForm.GetQueryString("categoryId");
+            $("#headTitle").html(layui.qyForm.GetQueryString("title"));
+            $("#headTitleOne").html(layui.qyForm.GetQueryString("title"));
+            if (categoryId=='0'){
+                getColectionList();
+			}else{
+                getStarList(categoryId);
+			}
+        }
+        //获取分类明星列表
+        function getStarList(categoryId){
+            layui.qyForm.qyajax("/f/app/married/filter",{categoryId:categoryId},function(data){
+                var html = template('tpl-starList', data);
+                $("#market").html(html);
+            });
+		}
+		//获取收藏明星列表
+        function getColectionList(){
+            layui.qyForm.qyajax("/f/app/married/getColectStar",{},function(data){
+                var html = template('tpl-colectionList', data);
+                $("#market").html(html);
+            });
+        }
+        //查询已购列表
+        function buyed(){
+            $("#buyed").addClass("aui-active").siblings().removeClass("aui-active");
+            $("#tab-buyed").show();
+            $("#tab-detail").hide();
+            $("#tab_order").hide();
+            $("#market").hide();
+            $(".dangri-img").hide();
+            layui.qyForm.qyajax("/f/app/married/getHoldGoods",{},function(data){
+                if(data.holdGoodsList.length==0){
+                    $("#buyed-img").show();
+                    $("#buyed-img").html('<img src="../image/wujilu.png"/>');
+                }
+                var html = template('tpl-holdGoodsList', data);
+                $("#temp-holdGoodsList").html(html);
+                var allmoney = 0;
+                for (var i=0;i<data.holdGoodsList.length;i++){
+                    allmoney += data.holdGoodsList[i].transactionPrice*data.holdGoodsList[i].num;
+				}
+                $("#allMoney").html(allmoney.toFixed(2));
+            });
+		}
+		//切换明细页面
+        function detail(){
+            $("#detail").addClass("aui-active").siblings().removeClass("aui-active");
+            $("#tab-buyed").hide();
+            $("#tab-detail").show();
+            $("#tab_order").hide();
+            $("#market").hide();
+            $(".dangri-img").hide();
+        }
+		//切换订单页面
+        function order() {
+            $("#order").addClass("aui-active").siblings().removeClass("aui-active");
+            $("#tab_order").show();
+            $("#tab-detail").hide();
+            $("#tab-buyed").hide();
+            $("#market").hide();
+            $(".dangri-img").hide();
+            var qyWin  = layui.qyWin;
+            $("#tab_order").html("");
+            layui.qyForm.pageajax(orderLoadData, {
+                "pageNo": "0",
+                "pageSize": "5",
+            }, 'temp_log');
+        }
+		//加载订单列表
+        function orderLoadData(param,callback){
+            layui.qyForm.qyajax("/f/app/married/getTransOrder",param,function(data){
+                var pageData = data.orderList;
+                var html = template('tpl-orderList', data);
+                $("#tab_order").append(html);
+                if (callback) {
+                    callback(pageData);
+                }
+            });
+        }
+
+		//执行撤单操作
+        function killOrder(orderId){
+     		layui.layer.open({
+				title:'撤单',
+				content:'你确定要撤单吗?',
+				btn:['确定','取消'],
+				yes:function(index){
+                    layui.qyForm.qyajax("/f/app/married/killOrder",{'orderId':orderId},function(data){
+                        $("#tab_order").html("");
+                        order();
+                    });
+                    layui.layer.close(index);
+				},no:function(){
+                    layui.layer.close(index);
+				}
+			});
+		}
+		//取消自选功能
+     function cancelColect(groupId){
+         layui.layer.open({
+             title:'取消自选',
+             content:'你确定要取消自选吗?',
+             btn:['确定','取消'],
+             yes:function(index){
+                 layui.qyForm.qyajax("/f/app/married/cancelColect",{'groupId':groupId},function(data){
+                     layui.qyWin.toast("取消自选成功!");
+                     getColectionList();
+                 });
+                 layui.layer.close(index);
+             },no:function(){
+                 layui.layer.close(index);
+
+             }
+         });
+
+	 }
+</script>
+</html>

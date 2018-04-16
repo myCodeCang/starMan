@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>拍卖记录</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/swiper/swiper.min.css"/>
+		<style type="text/css">
+			.table-box thead tr{border-bottom:1px solid #ddd;}
+		</style>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>拍卖记录</span>-->
+		    <!--</div>-->
+		    <!--&lt;!&ndash;<a class="aui-pull-right aui-btn">&ndash;&gt;-->
+		        <!--&lt;!&ndash;<span class="sangedian"></span>&ndash;&gt;-->
+		    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+
+		<div id="temp_log">
+
+		</div>
+		<div class="blank_20"></div>
+		<div class="blank_20"></div>
+
+	</body>
+	<script type="text/html" id="tpl_log">
+		{{if saleList.count == 0}}
+		<img src="../image/wu.png" style="display: block;margin:0 auto;margin-top:90px;width:45%;">
+		{{/if}}
+		{{each saleList.list}}
+			<div class="aui-content my-xianchang">
+				<div class="my-xianchang-one aui-pull-left">
+					<span class="aui-margin-t-0">{{$value.baseGoodsGroup.name}}({{$value.baseGoodsGroup.id}})</span>
+					<span class="aui-margin-t-10">{{$value.endTime}}</span>
+				</div>
+				<div class="my-xianchang-two aui-pull-right">
+					<span class="aui-margin-t-10">机构：<span>{{$value.succeedUser}}</span></span>
+					<span class="aui-margin-t-10">成交价：<span>￥{{$value.nowMoney}}</span></span>
+				</div>
+			</div>
+		{{/each}}
+	</script>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+
+        //apicloud 准备完成
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            var qyWin  = layui.qyWin;
+            layui.qyForm.pageajax(loadData, {
+                "pageNo": "0",
+                "pageSize": "6",
+                "status":"1"
+            }, 'temp_log');
+        }
+
+        function loadData(param,callback) {
+            layui.qyForm.qyajax("/f/app/auction/selectAuctionList",param ,function(data){
+                var pageData = data.saleList;
+                var html=template("tpl_log",data);
+                $("#temp_log").append(html);
+                if (callback) {
+                    callback(pageData);
+                }
+            });
+        }
+
+        function go(id) {
+            layui.qyWin.win("paimai","paimai.html?id="+id,"");
+        }
+
+        function dateForamte(date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            var h = date.getHours();
+            var minute = date.getMinutes();
+            minute = minute < 10 ? ('0' + minute) : minute;
+            return y + '-' + m + '-' + d+' '+h+':'+minute;
+        };
+	</script>
+</html>

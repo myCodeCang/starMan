@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>提现</title>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../static/qyScript/web/layer/css/layer-mobile.css"/>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn back" href="javascript :history.back(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>提现</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one" style="background:#393a3e;"></div>-->
+		<div class="aui-content tixian">
+			<h3 id= "userMoney"></h3>
+			<span>当前可提现金额(元)</span>
+		</div>
+		<input type="hidden" id= "bankCode" />
+		<div class="aui-content tixian-detail">
+			<ul class="aui-list aui-form-list tixian-detail-one">
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-label">
+		                    选择银行卡：
+		                </div>
+		                <div class="aui-list-item-input">
+							<select id = "temp-select" onchange="bankInfo()">
+							</select>
+
+		                </div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-label">
+		                    账户姓名：
+		                </div>
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="" disabled  id="trueName"/>
+		                </div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-label">
+		                    持卡银行：
+		                </div>
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="" disabled value=""  id="bankName"/>
+		                </div>
+		            </div>
+		        </li>
+		    </ul> 
+		    <ul class="aui-list aui-form-list tixian-detail-two"> 
+			    <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-label">
+		                    提现金额：
+		                </div>
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="请输入提现金额"  id= "money" onchange="getRealityMoney()">
+		                </div>
+		            </div>
+		        </li>
+			</ul> 
+		</div>
+		<div class="aui-content tixian-zhuyi">
+			<h3>贴士：</h3>
+			<p>1.手续费不足10元,按10元收取</p>
+			<p>2.提现金额必须为  <span id="multiple"></span></p>
+			<p>3.限定提现金额为:  <span id="bankLimit"></span>(元) 且必须为整数</p>
+			<p>4.提现日期为 :<span id="week"></span></p>
+			<p>5.提现时间为 :<span id="time"></span></p>
+		</div>
+		<div class="aui-content tixian-but">
+			<div class="aui-btn aui-btn-block" onclick="tan()">立即提现</div>
+		</div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+		<div class="blank_15"></div>
+	</body>
+
+	<script  type="text/html" id="tpl-select">
+		{{each userBankList.list}}
+		<option value="{{$value.id}}">{{$value.bankUserNum | subBankNumFormat}}</option>
+		{{/each}}
+	</script>
+
+	<script type="text/javascript">
+        var min = 0;
+        var max = 0;
+        var poundage = 0;
+        var saveFlag = false;
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+
+        //apicloud 准备完成
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            var qyWin  = layui.qyWin;
+
+            //qyWin.fixStatusBar("header");
+            selectloadData();
+
+
+        }
+
+        function selectloadData(){
+            layui.qyForm.qyajax("/f/app/userinfo/userBankList",{},function(data){
+                if(data.userBankList.count == 0){
+                    layui.qyWin.toast("您还未绑定银行卡,请先去绑定");
+                    setTimeout(function () {
+                        layui.qyWin.win('bangding-card','bangding-card.html',{})
+                    },2500);
+                    return ;
+                }
+                var html = template('tpl-select', data);
+                $("#temp-select").append(html);
+                bankInfo();
+            });
+        }
+
+        function save(){
+            var money = $("#money").val();
+            var password =  $("#password").val();
+            var userBankId = $('#temp-select').val();
+            var bankCode = $("#bankCode").val();
+            if( parseInt(money)!= money){
+                layui.qyWin.toast("金额输入错误,请输入整数!");
+                return ;
+            }
+
+            if(parseInt(money) < parseInt(min) || parseInt(money)  > parseInt(max)){
+                layui.qyWin.toast("金额输入错误,请输入限额中范围!");
+                return ;
+            }
+            if(!password){
+                layui.qyWin.toast("请输入支付密码!");
+                return ;
+            }
+            var data = {
+                money : money,
+                bankCode : bankCode,
+                userBankId : userBankId,
+                password : password
+            }
+			if(saveFlag){
+                return;
+			}
+            saveFlag=true;
+			layui.qyForm.qyajax("/f/app/userinfo/withdrawApply",data,function(res){
+				layui.qyWin.toast(res.info);
+                saveFlag = false;
+                setTimeout(function () {
+                    location.href=document.referrer;
+                },2500);
+			},function (ret) {
+                saveFlag = false;
+            });
+
+        }
+
+        function tan(){
+            layui.layer.open({
+                title: [
+                    '请输入支付密码'
+                ]
+                ,content: '<div class="odiv-input"><input id="password" type="password"  placeholder="请输入支付密码"/></div>',
+                btn: ['确认','取消'],
+                yes: function(index){
+                    save();
+                    layui.layer.close(index);
+                },
+            });
+        }
+
+        function bankInfo(){
+            var bankId = $('#temp-select').val();
+            layui.qyForm.qyajax("/f/app/userinfo/withdrawBankByUserBankid",{bankId : bankId},function(data){
+
+                $("#trueName").val(data.userInfo.trueName);
+                var message = data.min + '--' + data.max;
+                var multiple = data.multiple;
+                $("#userMoney").text(data.userInfo.money);
+                poundage = data.poundage;
+                $("#poundage").text(poundage*100 +"%");
+                min = data.min;
+                max = data.max;
+                bankCode = data.bankInfo.bankCode;
+                $("#bankLimit").html(message);
+                $("#multiple").html(multiple+"的整数倍");
+                $("#bankCode").val(data.bankInfo.bankCode);
+                $("#bankName").val(data.userinfoBank.bankName);
+                $("#week").html(data.week+"");
+                $("#time").html(data.timeStart+"-"+data.timeEnd);
+            });
+
+        }
+
+        function getRealityMoney(){
+            var money = $("#money").val();
+            $("#realityMoney").text(money*(1- poundage));
+        }
+	</script>
+</html>

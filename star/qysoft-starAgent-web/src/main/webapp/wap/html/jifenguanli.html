@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>积分管理</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>积分管理</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one" style="background:#393a3e;"></div>-->
+		<div class="aui-content jifen-guanli">
+			<h3 id="score"></h3>
+			<span>当前可用积分</span>
+			<!--<a href="javascript:;">兑换积分</a>-->
+		</div>
+		<div class="aui-content problem">
+			<ul class="aui-list">
+				<a href="jifenjilu.html">
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner aui-list-item-arrow">
+		                <div class="aui-list-item-title">积分记录</div>
+		            </div>
+		        </li>
+				</a>
+				<a href="duihuanguize.html">
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner aui-list-item-arrow">
+		                <div class="aui-list-item-title">积分兑换规则</div>
+		            </div>
+		        </li>
+				</a>
+		        <li class="aui-list-item"  onclick="goShop()">
+		            <div class="aui-list-item-inner aui-list-item-arrow">
+		                <div class="aui-list-item-title">积分商城</div>
+		            </div>
+		        </li>
+				<!--<a href="jifenjilu.html">-->
+		        <!--<li class="aui-list-item">-->
+		            <!--<div class="aui-list-item-inner aui-list-item-arrow">-->
+		                <!--<div class="aui-list-item-title">兑换历史</div>-->
+		            <!--</div>-->
+		        <!--</li>-->
+				<!--</a>-->
+		    </ul>
+		</div>
+	</body>
+	<script type="text/javascript">
+
+
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+
+        //apicloud 准备完成
+        layui.use(['qyWin', 'qyForm', 'template', 'layer'], initpage);
+
+
+        //初始化页面
+        function initpage() {
+            //获得参考价格
+            layui.qyForm.qyajax("/f/app/userinfo/userinfo",{},function(data) {
+                $("#score").html(data.user.score);
+            })
+        }
+
+        function goShop(){
+            window.location.href=CONS_QY_SHOP_URL+"/app/index.php?i="+shopid+"&c=entry&m=ewei_shopv2&do=mobile&r=creditshop";
+        }
+		</script>
+</html>

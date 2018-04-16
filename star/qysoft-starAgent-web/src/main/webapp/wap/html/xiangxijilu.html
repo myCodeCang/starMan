@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>详细记录</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<style type="text/css">
+			.gonggao .aui-tab-item{font-weight: normal;}
+			.gonggao .aui-active:before{display: none;}
+			.xiangxi{display: none;}
+		</style>
+	</head>
+	<body class="bg-fff">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<a href="xiangxijilu.html"><p>详细记录</p></a>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div class="aui-content gonggao">
+			<div class="aui-tab" id="tab">
+			    <div class="aui-tab-item aui-active" onclick="withDrawRecord();" id="withDrawRecord">提现记录</div>
+			    <div class="aui-tab-item" onclick="rechargeRecord()" id="rechargeRecord">充值记录</div>
+			</div>
+		</div>
+		<!--提现记录-->
+		<div class="aui-content xiangxi" id="tixian">
+			<ul class="aui-list aui-media-list" id="temp-withDrawLog">
+
+		    </ul>
+		</div> 
+		<!--充值记录-->
+		<div class="aui-content xiangxi" id="chongzhi">
+			<ul class="aui-list aui-media-list" id="temp-rechargeLog">
+
+		    </ul>
+		</div>
+	</body>
+	<script  type="text/html" id="tpl-rechargeLog">
+		{{each userChargeLogList.list}}
+		<li class="aui-list-item">
+			<div class="aui-media-list-item-inner">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-text aui-margin-b-5">
+						<div class="aui-list-item-title">充值成功</div>
+						<div class="aui-list-item-right">{{$value.changeMoney}}</div>
+					</div>
+					<div class="aui-list-item-text">
+						<div class="aui-list-item-title">{{$value.createDate}}</div>
+						<div class="aui-list-item-right">{{$value.changeFrom}}</div>
+					</div>
+				</div>
+			</div>
+		</li>
+		{{/each}}
+	</script>
+	<script  type="text/html" id="tpl-withDrawLog">
+		{{each page.list}}
+		<li class="aui-list-item">
+			<div class="aui-media-list-item-inner">
+				<div class="aui-list-item-inner">
+					<div class="aui-list-item-text aui-margin-b-5">
+						<div class="aui-list-item-title">提现成功</div>
+						<div class="aui-list-item-right">{{$value.changeMoney}}</div>
+					</div>
+					<div class="aui-list-item-text">
+						<div class="aui-list-item-title">{{$value.createDate}}</div>
+						<div class="aui-list-item-right">{{$value.userBankNum | subBankNumFormat}}</div>
+					</div>
+				</div>
+			</div>
+		</li>
+		{{/each}}
+	</script>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        layui.use(['qyWin','qyForm','qyShop','template'], initpage);
+        function initpage(){
+            $("#tixian").show();
+            userChargeLog();
+            userwithDrawLog();
+        }
+        //获取用户充值记录
+        function  userChargeLog() {
+            layui.qyForm.qyajax("/f/app/userinfo/userChargeLog",{},function(data){
+                if(data.userChargeLogList.count<=0){
+                    $("#noLog").show();
+				}else{
+                    var html = template('tpl-rechargeLog', data);
+                    $("#temp-rechargeLog").append(html);
+				}
+            });
+        }
+        //用户提现记录
+        function userwithDrawLog(){
+            layui.qyForm.qyajax("/f/app/userinfo/userMoneyTxList",{},function(data){
+                if(data.page.count<=0){
+                    $("#noLog").show();
+                }else {
+                    var html = template('tpl-withDrawLog', data);
+                    $("#temp-withDrawLog").append(html);
+                }
+            });
+		}
+        function withDrawRecord(){
+            $("#chongzhi").hide();
+            $("#tixian").show();
+            $("#withDrawRecord").addClass("aui-active").siblings().removeClass("aui-active");
+		}
+		function rechargeRecord(){
+            $("#chongzhi").show();
+            $("#tixian").hide();
+            $("#rechargeRecord").addClass("aui-active").siblings().removeClass("aui-active");
+		}
+
+	</script>
+</html>

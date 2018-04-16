@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.star.dao.RealTimePriceDao">
+    
+	<sql id="realTimePriceColumns">
+		a.id AS "id",
+		a.group_id AS "groupId",
+		a.price AS "price",
+		a.create_date AS "createDate",
+		a.time_stamp AS "timeStamp",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="realTimePriceJoins">
+	</sql>
+    
+	<select id="get" resultType="RealTimePrice">
+		SELECT 
+			<include refid="realTimePriceColumns"/>
+		FROM real_time_price a
+		<include refid="realTimePriceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getNowPrice" resultType="RealTimePrice">
+		SELECT
+		<include refid="realTimePriceColumns"/>
+		FROM  real_time_price a
+		WHERE a.group_id = #{groupId}
+		ORDER BY a.time_stamp DESC
+		limit 1
+	</select>
+
+	<select id="getRealTimePrice" resultType="RealTimePrice">
+select * from real_time_price r , (select max(cast(time_stamp as int)) as t from real_time_price GROUP BY group_id) r2 where r2.t = r.time_stamp
+	</select>
+	
+	<select id="findList" resultType="RealTimePrice">
+		SELECT 
+
+			<include refid="realTimePriceColumns"/>
+		FROM (SELECT * FROM real_time_price ORDER BY time_stamp DESC) a
+		<include refid="realTimePriceJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="createDateBegin != null and createDateBegin != ''">
+				AND DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i:%s') &gt;=   DATE_FORMAT(#{createDateBegin}, '%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="createDateEnd != null and createDateEnd != ''">
+				AND DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i:%s') &lt;=   DATE_FORMAT(#{createDateEnd}, '%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND DATE_FORMAT(a.create_date, '%Y-%m-%d') =   DATE_FORMAT(#{createDate}, '%Y-%m-%d')
+			</if>
+		</where>
+		GROUP BY a.group_id ,  DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i')
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="RealTimePrice">
+	SELECT
+	<include refid="realTimePriceColumns"/>
+	FROM real_time_price a
+	<include refid="realTimePriceJoins"/>
+	<where>
+		a.del_flag = #{DEL_FLAG_NORMAL}
+	</where>
+	<choose>
+		<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+			ORDER BY ${page.orderBy}
+		</when>
+		<otherwise>
+			ORDER BY a.update_date DESC
+		</otherwise>
+	</choose>
+</select>
+
+	<select id="findLastMinutesList" resultType="RealTimePrice">
+		SELECT
+		<include refid="realTimePriceColumns"/>
+		FROM real_time_price a
+		WHERE a.group_id = #{groupId}
+		AND DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i') &gt;=   DATE_FORMAT(#{beginTime}, '%Y-%m-%d %H:%i')
+		AND DATE_FORMAT(a.create_date, '%Y-%m-%d %H:%i') &lt;=   DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i')
+		ORDER BY a.time_stamp limit 1
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO real_time_price(
+			group_id,
+			price,
+			create_date,
+			time_stamp,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{groupId},
+			#{price},
+			#{createDate},
+			#{timeStamp},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE real_time_price SET 	
+			group_id = #{groupId},
+			price = #{price},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE real_time_price SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

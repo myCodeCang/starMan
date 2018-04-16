@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectKey">
+    <option name="state" value="project://e79810c8-c5c8-43b1-b19c-90c1f4095425" />
+  </component>
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/src/application.conf" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://weo2oboydjtfu1b/svn/QianYeSoft/%E7%BD%91%E7%BB%9C%E9%A1%B9%E7%9B%AE%E9%83%A8/%E7%BD%91%E7%BB%9C%E5%BB%BA%E7%AB%99/%E6%98%8E%E6%98%9F%E7%BB%8F%E7%BA%AA%E4%BA%BA/Code/md-tools/StarAgentMD-new-final/branches" />
+                  <option value="https://weo2oboydjtfu1b/svn/QianYeSoft/%E7%BD%91%E7%BB%9C%E9%A1%B9%E7%9B%AE%E9%83%A8/%E7%BD%91%E7%BB%9C%E5%BB%BA%E7%AB%99/%E6%98%8E%E6%98%9F%E7%BB%8F%E7%BA%AA%E4%BA%BA/Code/md-tools/StarAgentMD-new-final/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://weo2oboydjtfu1b/svn/QianYeSoft/%E7%BD%91%E7%BB%9C%E9%A1%B9%E7%9B%AE%E9%83%A8/%E7%BD%91%E7%BB%9C%E5%BB%BA%E7%AB%99/%E6%98%8E%E6%98%9F%E7%BB%8F%E7%BA%AA%E4%BA%BA/Code/md-tools/StarAgentMD-new-final/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+  <component name="UnicodeBrowser">
+    <option name="fontName" value="Courier New" />
+  </component>
+</project>

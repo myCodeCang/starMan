@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>兑换记录</title>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../static/qyScript/web/layer/css/layer-mobile.css"/>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+		    <!--<a class="aui-pull-left aui-btn back" href="javascript :history.back(-1)">-->
+		        <!--<span class="aui-iconfont aui-icon-left"></span>-->
+		    <!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>兑换历史</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn">-->
+		        <!--<span class=""></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one"></div>-->
+		<div id="temp-duihuanList"></div>
+
+		<div class="blank_20"></div>
+		<div class="blank_20"></div>
+	</body>
+
+	<script id="tpl-duihuanList" type="text/html">
+		{{if page.count == 0}}
+		<img src="../image/wu.png" style="display: block;margin:0 auto;margin-top:90px;width:45%;">
+		{{/if}}
+		{{each page.list}}
+		<div class="aui-content duihuan-lishi">
+			<ul class="aui-list aui-media-list">
+				<li class="aui-list-item">
+					<div class="aui-media-list-item-inner" style="display: flex;justify-content: center;align-items: center;">
+						<div class="aui-list-item-media">
+							<img src="{{$value.address}}">
+						</div>
+						<div class="aui-list-item-inner">
+							<span class="aui-ellipsis-1">{{$value.goodsName}}</span>
+							<span class="text-red">{{$value.type == 0 ? "未消费" : "已消费"}}</span>
+							<span>消耗时间：<span>{{$value.num}}</span></span>
+							<span>{{$value.createDate}}</span>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		{{/each}}
+	</script>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+
+        layui.use(['qyWin','qyForm','template','layer'], initpage);
+
+
+        function initpage(){
+            var qyWin  = layui.qyWin;
+            var qyForm = layui.qyForm;
+
+            layui.qyForm.pageajax(loadData,{
+                "pageNo":"0",
+                "pageSize":"10"
+            },"temp-duihuanList");
+        }
+        function loadData(param,callback){
+			layui.qyForm.qyajax("/f/star/attorn/exchangeStarPro",param,function (data) {
+                var pageData = data.page;
+                var html = template('tpl-duihuanList', data);
+                $("#temp-duihuanList").append(html);
+
+                //分页回调结束处理方法, 传入的参数必须正确
+                if(callback){
+                    callback(pageData);
+                }
+            })
+
+
+        }
+
+	</script>
+</html>

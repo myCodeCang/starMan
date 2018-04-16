@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>我的钱包</title>
+		<script type="text/javascript" src="../../static/qyScript/web/layer/layui.js"></script>
+		<script type="text/javascript" src="../../static/qyScript/web/qyconfig.js"></script>
+		<link rel="stylesheet" type="text/css" href="../css/aui/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/template/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/swiper/swiper.min.css"/>
+	</head>
+	<body class="bg-gray">
+		<!--<header class="aui-bar aui-bar-nav home">-->
+			<!--<a class="aui-pull-left aui-btn" href="javascript:history.go(-1)">-->
+				<!--<span class="aui-iconfont aui-icon-left"></span>-->
+			<!--</a>-->
+		    <!--<div class="aui-title">-->
+		    	<!--<span>我的钱包</span>-->
+		    <!--</div>-->
+		    <!--<a class="aui-pull-right aui-btn" onclick="zichan()">-->
+		        <!--<span class="sangedian"></span>-->
+		    <!--</a>-->
+		<!--</header>-->
+		<!--<div class="height-one" style="background:#393a3e;"></div>-->
+		<div class="aui-content my-qianbao">
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-6">
+						<span>现金余额(元)</span>
+						<h3 id="money"></h3>
+					</div>
+					<div class="aui-col-xs-6">
+						<span>积分余额：<span id="money2"></span></span>
+						<span id="chujin" style="display: none">出金账户：<span id="money3"></span></span>
+						<span id="baozheng" style="display: none">保证金：<span id="money4"></span></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="aui-content my-list">
+		    <ul class="aui-list aui-list-in">
+		    	<a href="chongzhi.html">
+			        <li class="aui-list-item">
+			            <div class="aui-list-item-label-icon">
+			                <i class="pic-chongzhi"></i>
+			            </div>
+			            <div class="aui-list-item-inner aui-list-item-arrow">
+			                <div class="aui-list-item-title">充值</div>
+			            </div>
+			        </li>
+		    	</a>
+		    	<a href="tixian.html">
+			        <li class="aui-list-item">
+			            <div class="aui-list-item-label-icon">
+			                <i class="pic-tixian"></i>
+			            </div>
+			            <div class="aui-list-item-inner aui-list-item-arrow">
+			                <div class="aui-list-item-title">提现</div>
+			            </div>
+			        </li>
+		      	</a>
+		    </ul>
+		    <a href="zichan-set.html">详细记录</a>
+		</div>    
+	</body>
+	<script type="text/javascript">
+        //框架初始化
+        qySoftInit("../../static/qyScript/web/");
+        //apicloud 准备完成
+        layui.use(['qyWin','qyForm','qyShop'], initpage);
+        function initpage(){
+            getUserinfo();
+        }
+        //获取用户基本信息
+        function  getUserinfo() {
+            layui.qyForm.qyajax("/f/app/userinfo/userinfo",{},function(data){
+                $("#money").html(data.user.money.toFixed(2));
+                $("#money2").html(data.user.score.toFixed(2));
+				 if(data.user.isUsercenter == 1){
+                     $("#chujin").show();
+                     $("#baozheng").show();
+				 }
+                $("#money3").html(data.user.money2.toFixed(2));
+                $("#money4").html(data.user.money3.toFixed(2));
+            });
+        }
+		function zichan() {
+			layui.qyWin.win("zichan","zichan-set.html",{});
+        }
+        function aliRecharge(){
+			layui.qyWin.win("Recharge", "chongzhi.html", {});
+		}
+	</script>
+</html>

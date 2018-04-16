@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <!--<link rel="stylesheet" type="text/css" href="../../css/aui/aui.css"/>-->
+    <script type="text/javascript" src="../../../static/qyScript/web/layer/layui.js"></script>
+    <script type="text/javascript" src="../../../static/qyScript/web/qyconfig.js"></script>
+    <!--<script type="text/javascript" src="../../../static/qyScript/web/aui/aui-tab.js"></script>-->
+
+    <style type="text/css">
+        .aui-bar-tab .aui-active {
+            color: #7e32b8;
+        }
+    </style>
+</head>
+<body>
+
+
+</body>
+
+<script id="tpl-footer" type="text/html">
+    <footer class="aui-bar aui-bar-tab" id="footer">
+        {{each menuGroup}}
+        <div class="aui-bar-tab-item" url="{{$value.url}}" fixBar="{{$value.fixBar}}" data-index="{{$value.index}}">
+            <i class="aui-iconfont {{$value.label}}"></i>
+            <div class="aui-bar-tab-label">{{$value.name}}</div>
+        </div>
+        {{/each}}
+    </footer>
+
+</script>
+
+
+<script type="text/javascript">
+
+    qySoftInit("../../../static/qyScript/web/");
+
+    var tab = null;
+    var param = null;
+
+    layui.use(['qyWin', 'template', 'auiTab', 'qyForm', 'qyShop', 'zepto'], function () {
+        var qyWin = layui.qyWin;
+
+        param = {
+            "menuGroup" : [
+                {
+                    "name" :"首页",
+                    "label" : "aui-icon-image",
+                    "url" : "index.shtml?index=0",
+                    "fixBar" : "false"
+                },
+                {
+                    "name" :"周边",
+                    "label" : "aui-icon-cart",
+                    "url" : "zhoubian.shtml?index=1",
+                    "fixBar" : "false"
+                },
+                {
+                    "name" :"财富",
+                    "label":"aui-icon-comment",
+                    "url" :"yuebao.shtml?index=2",
+                    "fixBar" : "false"
+                },
+                {
+                    "name" :"我的",
+                    "label" : "aui-icon-my",
+                    "url" : "my.shtml?index=3",
+                    "fixBar" : "false"
+                }
+            ],
+            frameType:true
+        };
+        initFooter(param);
+    });
+
+    function initFooter(param) {
+        var html = template('tpl-footer', param);
+        $("body").append(html);
+
+
+        tab = new auiTab({
+            element: document.getElementById("footer")
+        }, function (ret) {
+            fnOpenFrame(ret.index - 1);
+        });
+
+        var index = layui.qyForm.GetQueryString('index');
+        $('.aui-bar-tab-item').each(function () {
+            var order = $(this).attr('data-item-order');
+            if (order == index) {
+                $(this).addClass('aui-active');
+            } else {
+                $(this).removeClass('aui-active');
+            }
+        });
+        //fnOpenFrame(0);
+    }
+
+    function fnOpenFrame(index, isOpen) {
+        layui.qyWin.win(param.menuGroup[index].name, param.menuGroup[index].url, {});
+    }
+</script>
+</html>

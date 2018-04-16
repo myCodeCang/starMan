@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>积分商城</title>
+		<link rel="stylesheet" type="text/css" href="../css/aui.css" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<style type="text/css">
+			.chicang-detail [class*=aui-col-]>div{box-shadow:0px 2px 3px 2px #d7daed;}
+		</style>
+	</head>
+	<body class="bg-gray">
+		<header class="aui-bar aui-bar-nav home">
+		    <a class="aui-pull-left aui-btn">
+		        <span class="aui-iconfont aui-icon-left"></span>
+		    </a>
+		    <div class="aui-title">
+		    	<span>积分商城</span>
+		    </div>
+		    <a class="aui-pull-right aui-btn">
+		        <span class="sangedian"></span>
+		    </a>
+		</header>
+		<div class="height-one"></div>
+		<div class="aui-content chicang-detail">
+			<div class="aui-grid">
+				<div class="aui-row">
+					<div class="aui-col-xs-6">
+						<div><img src="../image/meinv.png"/></div>
+						<span class="aui-ellipsis-1 chicang-name">苹果iphone6s黑色版</span>
+						<h3><span>255555555积分</span><div class="aui-btn aui-pull-right" onclick="goumaiShow()">兑换</div></h3>
+					</div>
+					<div class="aui-col-xs-6">
+						<div><img src="../image/meinv.png"/></div>
+						<span class="aui-ellipsis-1 chicang-name">苹果iphone6s黑色版</span>
+						<h3><span>255555555积分</span><div class="aui-btn aui-pull-right">兑换</div></h3>
+					</div>
+					<div class="aui-col-xs-6">
+						<div><img src="../image/meinv.png"/></div>
+						<span class="aui-ellipsis-1 chicang-name">苹果iphone6s黑色版</span>
+						<h3><span>255555555积分</span><div class="aui-btn aui-pull-right" onclick="goumaiShow()">兑换</div></h3>
+					</div>
+					<div class="aui-col-xs-6">
+						<div><img src="../image/meinv.png"/></div>
+						<span class="aui-ellipsis-1 chicang-name">苹果iphone6s黑色版</span>
+						<h3><span>255555555积分</span><div class="aui-btn aui-pull-right">兑换</div></h3>
+					</div>
+						
+				</div>
+			</div>
+		</div>
+		<!--tan-->
+		<div class="aui-content video-tan" id="shangp-down">
+			<img src="../image/guan.png" onclick="goumaiHide()"/>
+			<h3>
+				<div>
+					<img src="../image/touxiang1.png"/>
+				</div>
+				<span>平板电脑</span>
+			</h3>
+			<p><span class="aui-pull-left">兑换所需：<span class="text-red">2.55秒</span></span><span class="aui-pull-right text-blue">剩余10份/总共10份</span></p>
+			<p><span class="aui-pull-left">当前持续：<span class="text-red">0秒</span></span></p>
+			<ul class="aui-list aui-form-list">
+		        <h3>联系人信息</h3>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-label">
+		                    	手机号：
+		                </div>
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="请填写你的手机号">
+		                </div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-label">
+		                    	姓　名：
+		                </div>
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="请填写你的姓名">
+		                </div>
+		            </div>
+		        </li>
+		        <li class="aui-list-item">
+		            <div class="aui-list-item-inner">
+		                <div class="aui-list-item-label">
+		                    	地　址：
+		                </div>
+		                <div class="aui-list-item-input">
+		                    <input type="text" placeholder="请选择收获地址">
+		                </div>
+		            </div>
+		        </li>
+		        <p><a href="##" class="aui-pull-right aui-font-size-12 aui-padded-r-15">去填写收货地址</a></p>
+		    </ul>
+		    <div class="aui-btn aui-btn-block">立即兑换</div>
+		</div>
+		<div class="mask"></div>
+	</body>
+	<script src="../script/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function goumaiShow(){
+			$('#shangp-down').animate({'bottom':'0'});
+			$('.mask').show();
+		}
+		function goumaiHide(){
+			$('#shangp-down').animate({'bottom':'-800px'});
+			$('.mask').hide();
+		}
+	</script>
+</html>
